@@ -14,20 +14,16 @@ namespace VetClinic_UI
     {
         private bool EraseMode = false;
         private bool UpdateMode = false;
+        MySQLConnectionManager connectionManager = new MySQLConnectionManager("vetclinic");
+        
+        private AnimalManager animalManager;
+        
         public Form1()
         {
             InitializeComponent();
             IdTxtBox_TextChanged(null,null);
-        }
-
-        private void SexF_CheckedChanged(object sender, EventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            throw new System.NotImplementedException();
+            SexM.Checked = true;
+            AnimalTypeTxt.SelectedIndex=0;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -50,12 +46,13 @@ namespace VetClinic_UI
         {
             if (EraseMode)
             {
-                
                 DialogResult choice = MessageBox.Show("Tem a certesa que quer apagar definitivamente este registo! (esta ação nao pode ser revertida)",
                     "Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (choice == DialogResult.Yes)
                 {
                     //Apagar
+                    connectionManager = new MySQLConnectionManager("vetclinic");
+                    animalManager = new AnimalManager(connectionManager);
                     MessageBox.Show("Registo apagado com sucesso!",
                         "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -68,12 +65,17 @@ namespace VetClinic_UI
             }
             else
             {
+                connectionManager = new MySQLConnectionManager("vetclinic");
+                animalManager = new AnimalManager(connectionManager);
                 //Desativar
             }
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+            SearchAnimalType.SelectedIndex = 0;
+            SearchTxtBox.Clear();
+            
             switch (SearchFilter.SelectedIndex)
             {
                 case 3:
@@ -89,6 +91,17 @@ namespace VetClinic_UI
 
         private void SearchBtn_Click(object sender, EventArgs e)
         {
+            connectionManager = new MySQLConnectionManager("vetclinic");
+            animalManager = new AnimalManager(connectionManager);
+            
+            if (SearchFilter.SelectedIndex == 3)
+            {
+                dataGridView1.DataSource=animalManager.SearchAnimals(3, SearchAnimalType.Text);
+            }
+            else
+            {
+                dataGridView1.DataSource=animalManager.SearchAnimals(SearchFilter.SelectedIndex, SearchTxtBox.Text);
+            }
             
         }
 
@@ -127,6 +140,33 @@ namespace VetClinic_UI
                 UpdateMode = false;
                 DelDeactiveBtn.Visible = false;
                 DelConfirm.Visible = false;
+            }
+        }
+
+        private void AddNewUpdateBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                connectionManager = new MySQLConnectionManager("vetclinic");
+                animalManager = new AnimalManager(connectionManager);
+                decimal peso = decimal.Parse(WeightTxtBox.Text.Replace(",", "").Replace(".", "")) / 100;
+                animalManager.AddAnimal(OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
+                    DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", peso);
+
+                // Clear all input fields
+                OwnerNameTxtBox.Clear();
+                OwnerContactTxtBox.Clear();
+                SexM.Checked = true;
+                AnimalBirth.Value = DateTime.Now;
+                AnimalTypeTxt.SelectedIndex=0;
+                BreedTxtBox.Clear();
+                WeightTxtBox.Clear();
+
+                MessageBox.Show("Novo registo adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocorreu um erro ao adicionar o novo registo: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

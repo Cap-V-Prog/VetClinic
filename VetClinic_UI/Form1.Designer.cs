@@ -43,30 +43,30 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.IdTxtBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.StateTxtBox = new System.Windows.Forms.TextBox();
+            this.LastConsultDateTxtBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.RegisterDateTxtBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.AddNewUpdateBtn = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.maskedTextBox2 = new System.Windows.Forms.MaskedTextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.OwnerContactTxtBox = new System.Windows.Forms.MaskedTextBox();
+            this.OwnerNameTxtBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.SexM = new System.Windows.Forms.RadioButton();
             this.SexF = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.AnimalBirth = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
+            this.WeightTxtBox = new System.Windows.Forms.MaskedTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.BreedTxtBox = new System.Windows.Forms.TextBox();
+            this.AnimalTypeTxt = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -156,7 +156,7 @@
             // 
             this.SearchFilter.DisplayMember = "0";
             this.SearchFilter.FormattingEnabled = true;
-            this.SearchFilter.Items.AddRange(new object[] { "ID", "Nome do dono", "Contacto do dono", "Tipo de Animal" });
+            this.SearchFilter.Items.AddRange(new object[] { "ID", "Nome do dono", "Contacto do dono", "Tipo de Animal", "Todos" });
             this.SearchFilter.Location = new System.Drawing.Point(97, 25);
             this.SearchFilter.Name = "SearchFilter";
             this.SearchFilter.Size = new System.Drawing.Size(121, 21);
@@ -207,11 +207,11 @@
             // 
             this.groupBox4.Controls.Add(this.IdTxtBox);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Controls.Add(this.textBox2);
-            this.groupBox4.Controls.Add(this.textBox6);
+            this.groupBox4.Controls.Add(this.StateTxtBox);
+            this.groupBox4.Controls.Add(this.LastConsultDateTxtBox);
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.label9);
-            this.groupBox4.Controls.Add(this.textBox4);
+            this.groupBox4.Controls.Add(this.RegisterDateTxtBox);
             this.groupBox4.Controls.Add(this.label8);
             this.groupBox4.Location = new System.Drawing.Point(460, 8);
             this.groupBox4.Name = "groupBox4";
@@ -239,21 +239,21 @@
             this.label10.Text = "Estado";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox2
+            // StateTxtBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(132, 52);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 5;
+            this.StateTxtBox.Location = new System.Drawing.Point(132, 52);
+            this.StateTxtBox.Name = "StateTxtBox";
+            this.StateTxtBox.ReadOnly = true;
+            this.StateTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.StateTxtBox.TabIndex = 5;
             // 
-            // textBox6
+            // LastConsultDateTxtBox
             // 
-            this.textBox6.Location = new System.Drawing.Point(132, 104);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(100, 20);
-            this.textBox6.TabIndex = 11;
+            this.LastConsultDateTxtBox.Location = new System.Drawing.Point(132, 104);
+            this.LastConsultDateTxtBox.Name = "LastConsultDateTxtBox";
+            this.LastConsultDateTxtBox.ReadOnly = true;
+            this.LastConsultDateTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.LastConsultDateTxtBox.TabIndex = 11;
             // 
             // label5
             // 
@@ -273,13 +273,13 @@
             this.label9.Text = "ID";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox4
+            // RegisterDateTxtBox
             // 
-            this.textBox4.Location = new System.Drawing.Point(132, 78);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 7;
+            this.RegisterDateTxtBox.Location = new System.Drawing.Point(132, 78);
+            this.RegisterDateTxtBox.Name = "RegisterDateTxtBox";
+            this.RegisterDateTxtBox.ReadOnly = true;
+            this.RegisterDateTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.RegisterDateTxtBox.TabIndex = 7;
             // 
             // label8
             // 
@@ -298,12 +298,13 @@
             this.AddNewUpdateBtn.TabIndex = 4;
             this.AddNewUpdateBtn.Text = "Adicionar novo";
             this.AddNewUpdateBtn.UseVisualStyleBackColor = true;
+            this.AddNewUpdateBtn.Click += new System.EventHandler(this.AddNewUpdateBtn_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Controls.Add(this.maskedTextBox2);
-            this.groupBox3.Controls.Add(this.textBox3);
+            this.groupBox3.Controls.Add(this.OwnerContactTxtBox);
+            this.groupBox3.Controls.Add(this.OwnerNameTxtBox);
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Location = new System.Drawing.Point(8, 148);
             this.groupBox3.Name = "groupBox3";
@@ -321,24 +322,23 @@
             this.label7.Text = "Contacto do dono";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // maskedTextBox2
+            // OwnerContactTxtBox
             // 
-            this.maskedTextBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBox2.Location = new System.Drawing.Point(114, 52);
-            this.maskedTextBox2.Mask = "000000000";
-            this.maskedTextBox2.Name = "maskedTextBox2";
-            this.maskedTextBox2.Size = new System.Drawing.Size(63, 22);
-            this.maskedTextBox2.TabIndex = 9;
-            this.maskedTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.OwnerContactTxtBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OwnerContactTxtBox.Location = new System.Drawing.Point(114, 52);
+            this.OwnerContactTxtBox.Mask = "000000000";
+            this.OwnerContactTxtBox.Name = "OwnerContactTxtBox";
+            this.OwnerContactTxtBox.Size = new System.Drawing.Size(77, 22);
+            this.OwnerContactTxtBox.TabIndex = 9;
+            this.OwnerContactTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // textBox3
+            // OwnerNameTxtBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(114, 26);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(324, 20);
-            this.textBox3.TabIndex = 7;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            this.OwnerNameTxtBox.Location = new System.Drawing.Point(114, 26);
+            this.OwnerNameTxtBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.OwnerNameTxtBox.Name = "OwnerNameTxtBox";
+            this.OwnerNameTxtBox.Size = new System.Drawing.Size(324, 20);
+            this.OwnerNameTxtBox.TabIndex = 7;
             // 
             // label6
             // 
@@ -353,13 +353,13 @@
             // 
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
+            this.groupBox1.Controls.Add(this.AnimalBirth);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.maskedTextBox1);
+            this.groupBox1.Controls.Add(this.WeightTxtBox);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.BreedTxtBox);
+            this.groupBox1.Controls.Add(this.AnimalTypeTxt);
             this.groupBox1.Location = new System.Drawing.Point(8, 8);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(5);
             this.groupBox1.Name = "groupBox1";
@@ -398,7 +398,6 @@
             this.SexF.TabStop = true;
             this.SexF.Text = "F";
             this.SexF.UseVisualStyleBackColor = true;
-            this.SexF.CheckedChanged += new System.EventHandler(this.SexF_CheckedChanged);
             // 
             // label4
             // 
@@ -409,12 +408,12 @@
             this.label4.Text = "Data de nascimento";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // dateTimePicker1
+            // AnimalBirth
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(114, 105);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(324, 20);
-            this.dateTimePicker1.TabIndex = 9;
+            this.AnimalBirth.Location = new System.Drawing.Point(114, 105);
+            this.AnimalBirth.Name = "AnimalBirth";
+            this.AnimalBirth.Size = new System.Drawing.Size(324, 20);
+            this.AnimalBirth.TabIndex = 9;
             // 
             // label3
             // 
@@ -425,14 +424,14 @@
             this.label3.Text = "Peso (Kg)";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // maskedTextBox1
+            // WeightTxtBox
             // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(114, 52);
-            this.maskedTextBox1.Mask = "#####.##";
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(63, 20);
-            this.maskedTextBox1.TabIndex = 7;
-            this.maskedTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.WeightTxtBox.Location = new System.Drawing.Point(114, 52);
+            this.WeightTxtBox.Mask = "#####.##";
+            this.WeightTxtBox.Name = "WeightTxtBox";
+            this.WeightTxtBox.Size = new System.Drawing.Size(63, 20);
+            this.WeightTxtBox.TabIndex = 7;
+            this.WeightTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label2
             // 
@@ -452,25 +451,25 @@
             this.label1.Text = "Raça";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox1
+            // BreedTxtBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(114, 26);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(254, 20);
-            this.textBox1.TabIndex = 4;
+            this.BreedTxtBox.Location = new System.Drawing.Point(114, 26);
+            this.BreedTxtBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.BreedTxtBox.Name = "BreedTxtBox";
+            this.BreedTxtBox.Size = new System.Drawing.Size(254, 20);
+            this.BreedTxtBox.TabIndex = 4;
             // 
-            // comboBox1
+            // AnimalTypeTxt
             // 
-            this.comboBox1.DisplayMember = "0";
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.ItemHeight = 13;
-            this.comboBox1.Items.AddRange(new object[] { "Cão", "Gato", "Ave" });
-            this.comboBox1.Location = new System.Drawing.Point(114, 78);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(254, 21);
-            this.comboBox1.TabIndex = 3;
-            this.comboBox1.ValueMember = "0";
+            this.AnimalTypeTxt.DisplayMember = "0";
+            this.AnimalTypeTxt.FormattingEnabled = true;
+            this.AnimalTypeTxt.ItemHeight = 13;
+            this.AnimalTypeTxt.Items.AddRange(new object[] { "Cão", "Gato", "Ave" });
+            this.AnimalTypeTxt.Location = new System.Drawing.Point(114, 78);
+            this.AnimalTypeTxt.Name = "AnimalTypeTxt";
+            this.AnimalTypeTxt.Size = new System.Drawing.Size(254, 21);
+            this.AnimalTypeTxt.TabIndex = 3;
+            this.AnimalTypeTxt.ValueMember = "0";
             // 
             // tabPage2
             // 
@@ -526,38 +525,38 @@
 
         private System.Windows.Forms.GroupBox groupBox4;
 
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox RegisterDateTxtBox;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox IdTxtBox;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox LastConsultDateTxtBox;
         private System.Windows.Forms.Label label10;
 
         private System.Windows.Forms.Label label7;
 
-        private System.Windows.Forms.MaskedTextBox maskedTextBox2;
+        private System.Windows.Forms.MaskedTextBox OwnerContactTxtBox;
 
         private System.Windows.Forms.Label label6;
 
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox OwnerNameTxtBox;
 
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox StateTxtBox;
         private System.Windows.Forms.Label label5;
 
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker AnimalBirth;
         private System.Windows.Forms.Label label4;
 
         private System.Windows.Forms.Label label3;
 
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
+        private System.Windows.Forms.MaskedTextBox WeightTxtBox;
 
         private System.Windows.Forms.Label label1;
 
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ComboBox AnimalTypeTxt;
+        private System.Windows.Forms.TextBox BreedTxtBox;
 
         private System.Windows.Forms.GroupBox groupBox1;
 
