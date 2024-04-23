@@ -62,6 +62,10 @@ namespace VetClinic_UI
                     {
                         MessageBox.Show("Erro: " + e);
                     }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
             }
 
@@ -88,8 +92,74 @@ namespace VetClinic_UI
 
                     connection.Open();
                     command.ExecuteNonQuery();
+                    connection.Close();
                 }
             }
         }
+        
+        public void UpdateAnimal(int id, string nomeDono, string contatoDono, DateTime dataNascimento, DateTime dataUltimaConsulta, string tipoAnimal, string raca, string sexo, decimal peso)
+        {
+            string query = "UPDATE Animal SET nome_dono = @nomeDono, contato_dono = @contatoDono, data_nascimento = @dataNascimento, " +
+                           "data_ultima_consulta = @dataUltimaConsulta, tipo_animal = @tipoAnimal, raca = @raca, sexo = @sexo, " +
+                           "peso = @peso WHERE id = @id";
+
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@nomeDono", nomeDono);
+                    command.Parameters.AddWithValue("@contatoDono", contatoDono);
+                    command.Parameters.AddWithValue("@dataNascimento", dataNascimento);
+                    command.Parameters.AddWithValue("@dataUltimaConsulta", dataUltimaConsulta);
+                    command.Parameters.AddWithValue("@tipoAnimal", tipoAnimal);
+                    command.Parameters.AddWithValue("@raca", raca);
+                    command.Parameters.AddWithValue("@sexo", sexo);
+                    command.Parameters.AddWithValue("@peso", peso);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Erro: " + e);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+        }
+        
+        public void DeactivateAnimal(int animalId)
+        {
+            string query = "UPDATE Animal SET estado = 'inativo' WHERE id = @animalId";
+
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@animalId", animalId);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Erro: " + e);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+        }
+        
     }
 }

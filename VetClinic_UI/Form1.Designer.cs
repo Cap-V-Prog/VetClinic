@@ -145,12 +145,24 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(6, 62);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.ShowCellErrors = false;
+            this.dataGridView1.ShowCellToolTips = false;
+            this.dataGridView1.ShowEditingIcon = false;
+            this.dataGridView1.ShowRowErrors = false;
             this.dataGridView1.Size = new System.Drawing.Size(922, 306);
             this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             // 
             // SearchFilter
             // 
@@ -197,7 +209,7 @@
             // 
             this.DelDeactiveBtn.Location = new System.Drawing.Point(460, 148);
             this.DelDeactiveBtn.Name = "DelDeactiveBtn";
-            this.DelDeactiveBtn.Size = new System.Drawing.Size(107, 45);
+            this.DelDeactiveBtn.Size = new System.Drawing.Size(107, 46);
             this.DelDeactiveBtn.TabIndex = 14;
             this.DelDeactiveBtn.Text = "Desativar";
             this.DelDeactiveBtn.UseVisualStyleBackColor = true;
@@ -215,7 +227,7 @@
             this.groupBox4.Controls.Add(this.label8);
             this.groupBox4.Location = new System.Drawing.Point(460, 8);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(238, 132);
+            this.groupBox4.Size = new System.Drawing.Size(272, 132);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Informação secundária";
@@ -226,7 +238,7 @@
             this.IdTxtBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.IdTxtBox.Name = "IdTxtBox";
             this.IdTxtBox.ReadOnly = true;
-            this.IdTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.IdTxtBox.Size = new System.Drawing.Size(134, 20);
             this.IdTxtBox.TabIndex = 9;
             this.IdTxtBox.TextChanged += new System.EventHandler(this.IdTxtBox_TextChanged);
             // 
@@ -244,7 +256,7 @@
             this.StateTxtBox.Location = new System.Drawing.Point(132, 52);
             this.StateTxtBox.Name = "StateTxtBox";
             this.StateTxtBox.ReadOnly = true;
-            this.StateTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.StateTxtBox.Size = new System.Drawing.Size(134, 20);
             this.StateTxtBox.TabIndex = 5;
             // 
             // LastConsultDateTxtBox
@@ -252,7 +264,7 @@
             this.LastConsultDateTxtBox.Location = new System.Drawing.Point(132, 104);
             this.LastConsultDateTxtBox.Name = "LastConsultDateTxtBox";
             this.LastConsultDateTxtBox.ReadOnly = true;
-            this.LastConsultDateTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.LastConsultDateTxtBox.Size = new System.Drawing.Size(134, 20);
             this.LastConsultDateTxtBox.TabIndex = 11;
             // 
             // label5
@@ -278,7 +290,7 @@
             this.RegisterDateTxtBox.Location = new System.Drawing.Point(132, 78);
             this.RegisterDateTxtBox.Name = "RegisterDateTxtBox";
             this.RegisterDateTxtBox.ReadOnly = true;
-            this.RegisterDateTxtBox.Size = new System.Drawing.Size(100, 20);
+            this.RegisterDateTxtBox.Size = new System.Drawing.Size(134, 20);
             this.RegisterDateTxtBox.TabIndex = 7;
             // 
             // label8
@@ -292,9 +304,9 @@
             // 
             // AddNewUpdateBtn
             // 
-            this.AddNewUpdateBtn.Location = new System.Drawing.Point(591, 148);
+            this.AddNewUpdateBtn.Location = new System.Drawing.Point(625, 148);
             this.AddNewUpdateBtn.Name = "AddNewUpdateBtn";
-            this.AddNewUpdateBtn.Size = new System.Drawing.Size(107, 45);
+            this.AddNewUpdateBtn.Size = new System.Drawing.Size(107, 46);
             this.AddNewUpdateBtn.TabIndex = 4;
             this.AddNewUpdateBtn.Text = "Adicionar novo";
             this.AddNewUpdateBtn.UseVisualStyleBackColor = true;
@@ -324,13 +336,15 @@
             // 
             // OwnerContactTxtBox
             // 
+            this.OwnerContactTxtBox.BeepOnError = true;
             this.OwnerContactTxtBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OwnerContactTxtBox.Location = new System.Drawing.Point(114, 52);
-            this.OwnerContactTxtBox.Mask = "000000000";
+            this.OwnerContactTxtBox.Mask = "999999999";
             this.OwnerContactTxtBox.Name = "OwnerContactTxtBox";
             this.OwnerContactTxtBox.Size = new System.Drawing.Size(77, 22);
             this.OwnerContactTxtBox.TabIndex = 9;
             this.OwnerContactTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.OwnerContactTxtBox.Validating += new System.ComponentModel.CancelEventHandler(this.OwnerContactTxtBox_Validating);
             // 
             // OwnerNameTxtBox
             // 
@@ -429,6 +443,8 @@
             this.WeightTxtBox.Location = new System.Drawing.Point(114, 52);
             this.WeightTxtBox.Mask = "#####.##";
             this.WeightTxtBox.Name = "WeightTxtBox";
+            this.WeightTxtBox.PromptChar = '0';
+            this.WeightTxtBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.WeightTxtBox.Size = new System.Drawing.Size(63, 20);
             this.WeightTxtBox.TabIndex = 7;
             this.WeightTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
