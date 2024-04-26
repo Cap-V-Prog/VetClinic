@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS FichaMedica (
     prescricao_medica TEXT,
     proxima_visita DATE,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
-    FOREIGN KEY (id_animal) REFERENCES Animal(id)
+    FOREIGN KEY (id_animal) REFERENCES Animal(id),
+    FOREIGN KEY (ato_medico) REFERENCES AtosMedicos(id_ato_medico)
 );
 
 -- Tabela para registrar os materiais utilizados em cada consulta
