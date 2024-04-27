@@ -21,19 +21,16 @@ namespace VetClinic_UI
             switch (searchBy)
             {
                 case 0: // ID do animal
-                    query = $"SELECT * FROM Animal WHERE id = {searchText}";
+                    query = $"SELECT AtosMedicos.* FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.id = {searchText}";
                     break;
                 case 1: // Nome do dono
-                    query = "SELECT * FROM Animal WHERE nome_dono LIKE @searchText";
+                    query = "SELECT * FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.nome_dono LIKE @searchText";
                     break;
-                case 2: // Contacto do dono
-                    query = "SELECT * FROM Animal WHERE contato_dono LIKE @searchText";
+                case 2: // Nome do animal
+                    query = "SELECT * FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.nome_animal LIKE @searchText";
                     break;
-                case 3: // Tipo de animal
-                    query = "SELECT * FROM Animal WHERE tipo_animal LIKE @searchText";
-                    break;
-                case 4: // Search all animals
-                    query = "SELECT * FROM Animal";
+                case 3: // Search all medicacts
+                    query = "SELECT * FROM AtosMedicos";
                     break;
                 default:
                     throw new ArgumentException("Opção de pesquisa inválida");
@@ -45,7 +42,7 @@ namespace VetClinic_UI
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    if (searchBy != 4 && searchBy != 0) // Skip parameter assignment for search all option
+                    if (searchBy != 3 && searchBy != 0) // Skip parameter assignment for search all option
                     {
                         command.Parameters.AddWithValue("@searchText", "%" + searchText + "%");
                     }
@@ -70,6 +67,57 @@ namespace VetClinic_UI
             }
 
             return dataTable;
+        }
+        
+        public void AddMedicAct(int animalId, string atoMedico, string descAtoMedico, decimal custoUnitario)
+        {
+            string query = "INSERT INTO AtosMedicos (id_animal, ato_medico, descricao_ato_medico, custo_unitario, data_insercao, estado) VALUES (@animalId, @atoMedico, @descAtoMedico, @custoUnitario, CURDATE(), 'ativo')";
+            
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@animalId", animalId);
+                    command.Parameters.AddWithValue("@atoMedico", atoMedico);
+                    command.Parameters.AddWithValue("@descAtoMedico", descAtoMedico);
+                    command.Parameters.AddWithValue("@custoUnitario", custoUnitario);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+        }
+        
+        public void UpdateAnimal(int id, int animalId, string atoMedico, string descAtoMedico, decimal custoUnitario)
+        {
+            string query = "UPDATE AtosMedicos SET id_animal = @animalId, ato_medico = @atoMedico,descricao_ato_medico = @descAtoMedico, custo_unitario = @custoUnitario, data_ultima_alteracao = CURDATE() WHERE id_ato_medico = @id";
+
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@animalId", animalId);
+                    command.Parameters.AddWithValue("@atoMedico", atoMedico);
+                    command.Parameters.AddWithValue("@descAtoMedico", descAtoMedico);
+                    command.Parameters.AddWithValue("@custoUnitario", custoUnitario);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Erro: " + e);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
         }
     }
 }

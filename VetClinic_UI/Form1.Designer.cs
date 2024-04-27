@@ -58,7 +58,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.AnimalName_TxtBox = new System.Windows.Forms.TextBox();
+            this.AnimalNameTxtBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.SexM = new System.Windows.Forms.RadioButton();
             this.SexF = new System.Windows.Forms.RadioButton();
@@ -79,7 +79,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.OwnerNameTxtBox2 = new System.Windows.Forms.TextBox();
             this.AnimalIDTxtBox = new System.Windows.Forms.TextBox();
-            this.AnimalNameTxtBox = new System.Windows.Forms.TextBox();
+            this.AnimalNameTxtBox2 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -213,7 +213,7 @@
             this.dataGridView1.ShowRowErrors = false;
             this.dataGridView1.Size = new System.Drawing.Size(922, 276);
             this.dataGridView1.TabIndex = 3;
-            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
+            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             // 
             // SearchFilter
             // 
@@ -417,7 +417,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.AnimalName_TxtBox);
+            this.groupBox1.Controls.Add(this.AnimalNameTxtBox);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.AnimalBirth);
@@ -444,13 +444,13 @@
             this.label13.Text = "Nome";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // AnimalName_TxtBox
+            // AnimalNameTxtBox
             // 
-            this.AnimalName_TxtBox.Location = new System.Drawing.Point(114, 26);
-            this.AnimalName_TxtBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-            this.AnimalName_TxtBox.Name = "AnimalName_TxtBox";
-            this.AnimalName_TxtBox.Size = new System.Drawing.Size(254, 20);
-            this.AnimalName_TxtBox.TabIndex = 11;
+            this.AnimalNameTxtBox.Location = new System.Drawing.Point(114, 26);
+            this.AnimalNameTxtBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.AnimalNameTxtBox.Name = "AnimalNameTxtBox";
+            this.AnimalNameTxtBox.Size = new System.Drawing.Size(254, 20);
+            this.AnimalNameTxtBox.TabIndex = 11;
             // 
             // groupBox2
             // 
@@ -580,6 +580,7 @@
             this.DelActBtn.TabIndex = 21;
             this.DelActBtn.Text = "Remover registo";
             this.DelActBtn.UseVisualStyleBackColor = true;
+            this.DelActBtn.Click += new System.EventHandler(this.DelActBtn_Click);
             // 
             // NewUpdateActBtn
             // 
@@ -589,6 +590,7 @@
             this.NewUpdateActBtn.TabIndex = 20;
             this.NewUpdateActBtn.Text = "Inserir novo registo";
             this.NewUpdateActBtn.UseVisualStyleBackColor = true;
+            this.NewUpdateActBtn.Click += new System.EventHandler(this.NewUpdateActBtn_Click);
             // 
             // groupBox9
             // 
@@ -597,7 +599,7 @@
             this.groupBox9.Controls.Add(this.label14);
             this.groupBox9.Controls.Add(this.OwnerNameTxtBox2);
             this.groupBox9.Controls.Add(this.AnimalIDTxtBox);
-            this.groupBox9.Controls.Add(this.AnimalNameTxtBox);
+            this.groupBox9.Controls.Add(this.AnimalNameTxtBox2);
             this.groupBox9.Controls.Add(this.label15);
             this.groupBox9.Controls.Add(this.label16);
             this.groupBox9.Location = new System.Drawing.Point(6, 6);
@@ -615,6 +617,7 @@
             this.SelectDummyBtn.TabIndex = 31;
             this.SelectDummyBtn.Text = "Selecionar";
             this.SelectDummyBtn.UseVisualStyleBackColor = true;
+            this.SelectDummyBtn.Click += new System.EventHandler(this.SelectDummyBtn_Click);
             // 
             // ClearBtn2
             // 
@@ -650,14 +653,15 @@
             this.AnimalIDTxtBox.ReadOnly = true;
             this.AnimalIDTxtBox.Size = new System.Drawing.Size(232, 20);
             this.AnimalIDTxtBox.TabIndex = 22;
+            this.AnimalIDTxtBox.TextChanged += new System.EventHandler(this.AnimalIDTxtBox_TextChanged);
             // 
-            // AnimalNameTxtBox
+            // AnimalNameTxtBox2
             // 
-            this.AnimalNameTxtBox.Location = new System.Drawing.Point(141, 45);
-            this.AnimalNameTxtBox.Name = "AnimalNameTxtBox";
-            this.AnimalNameTxtBox.ReadOnly = true;
-            this.AnimalNameTxtBox.Size = new System.Drawing.Size(394, 20);
-            this.AnimalNameTxtBox.TabIndex = 31;
+            this.AnimalNameTxtBox2.Location = new System.Drawing.Point(141, 45);
+            this.AnimalNameTxtBox2.Name = "AnimalNameTxtBox2";
+            this.AnimalNameTxtBox2.ReadOnly = true;
+            this.AnimalNameTxtBox2.Size = new System.Drawing.Size(394, 20);
+            this.AnimalNameTxtBox2.TabIndex = 31;
             // 
             // label15
             // 
@@ -853,7 +857,7 @@
             // 
             this.SearchFilterTxt2.DisplayMember = "0";
             this.SearchFilterTxt2.FormattingEnabled = true;
-            this.SearchFilterTxt2.Items.AddRange(new object[] { "ID", "Nome do dono", "Contacto do dono", "Tipo de Animal", "Todos" });
+            this.SearchFilterTxt2.Items.AddRange(new object[] { "ID", "Nome do dono", "Nome do animal", "Todos" });
             this.SearchFilterTxt2.Location = new System.Drawing.Point(97, 25);
             this.SearchFilterTxt2.Name = "SearchFilterTxt2";
             this.SearchFilterTxt2.Size = new System.Drawing.Size(121, 21);
@@ -950,7 +954,7 @@
         private System.Windows.Forms.TextBox SearchTxtBox2;
         private System.Windows.Forms.Button SearchBtn2;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox AnimalName_TxtBox;
+        private System.Windows.Forms.TextBox AnimalNameTxtBox2;
 
         private System.Windows.Forms.ComboBox SearchAnimalType;
 

@@ -72,15 +72,16 @@ namespace VetClinic_UI
             return dataTable;
         }
         
-        public void AddAnimal(string nomeDono, string contatoDono, DateTime dataNascimento, DateTime dataUltimaConsulta, string tipoAnimal, string raca, string sexo, decimal peso)
+        public void AddAnimal(string nomeAnimal, string nomeDono, string contatoDono, DateTime dataNascimento, DateTime dataUltimaConsulta, string tipoAnimal, string raca, string sexo, decimal peso)
         {
-            string query = "INSERT INTO Animal (nome_dono, contato_dono, data_nascimento, data_ultima_consulta, tipo_animal, raca, sexo, peso, data_registro, estado) " +
-                           "VALUES (@nomeDono, @contatoDono, @dataNascimento, @dataUltimaConsulta, @tipoAnimal, @raca, @sexo, @peso, CURRENT_TIMESTAMP, 'ativo')";
+            string query = "INSERT INTO Animal (nome_animal,nome_dono, contato_dono, data_nascimento, data_ultima_consulta, tipo_animal, raca, sexo, peso, data_registro, estado) " +
+                           "VALUES (@nomeAnimal,@nomeDono, @contatoDono, @dataNascimento, @dataUltimaConsulta, @tipoAnimal, @raca, @sexo, @peso, CURRENT_TIMESTAMP, 'ativo')";
 
             using (MySqlConnection connection = connectionManager.GetConnection())
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@nomeAnimal", nomeAnimal);
                     command.Parameters.AddWithValue("@nomeDono", nomeDono);
                     command.Parameters.AddWithValue("@contatoDono", contatoDono);
                     command.Parameters.AddWithValue("@dataNascimento", dataNascimento);
@@ -97,9 +98,9 @@ namespace VetClinic_UI
             }
         }
         
-        public void UpdateAnimal(int id, string nomeDono, string contatoDono, DateTime dataNascimento, DateTime dataUltimaConsulta, string tipoAnimal, string raca, string sexo, decimal peso)
+        public void UpdateAnimal(int id,string nomeAnimal, string nomeDono, string contatoDono, DateTime dataNascimento, DateTime dataUltimaConsulta, string tipoAnimal, string raca, string sexo, decimal peso)
         {
-            string query = "UPDATE Animal SET nome_dono = @nomeDono, contato_dono = @contatoDono, data_nascimento = @dataNascimento, " +
+            string query = "UPDATE Animal SET nome_animal = @nomeAnimal, nome_dono = @nomeDono, contato_dono = @contatoDono, data_nascimento = @dataNascimento, " +
                            "data_ultima_consulta = @dataUltimaConsulta, tipo_animal = @tipoAnimal, raca = @raca, sexo = @sexo, " +
                            "peso = @peso WHERE id = @id";
 
@@ -108,6 +109,7 @@ namespace VetClinic_UI
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@nomeAnimal", nomeAnimal);
                     command.Parameters.AddWithValue("@nomeDono", nomeDono);
                     command.Parameters.AddWithValue("@contatoDono", contatoDono);
                     command.Parameters.AddWithValue("@dataNascimento", dataNascimento);
