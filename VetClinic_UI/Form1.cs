@@ -86,7 +86,7 @@ namespace VetClinic_UI
                         animalManager.DeactivateAnimal(int.Parse(IdTxtBox.Text));
                         MessageBox.Show("O animal foi desativado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         
-                        ClearAllInputs();
+                        ClearAllInputs(0);
                     }
                 }
             }
@@ -214,7 +214,7 @@ namespace VetClinic_UI
                             // Show a success message
                             MessageBox.Show("Registro atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
-                            ClearAllInputs();
+                            ClearAllInputs(0);
                         }
                     }
                 }
@@ -237,7 +237,7 @@ namespace VetClinic_UI
                         animalManager.AddAnimal(OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
                             DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", peso);
 
-                        ClearAllInputs();
+                        ClearAllInputs(0);
 
                         MessageBox.Show("Novo registo adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
@@ -340,25 +340,73 @@ namespace VetClinic_UI
             }
         }
         
-        private void ClearAllInputs()
+        private void ClearAllInputs(int page)
         {
-            // Clear text boxes
-            IdTxtBox.Text = "";
-            OwnerNameTxtBox.Text = "";
-            OwnerContactTxtBox.Text = "";
-            BreedTxtBox.Text = "";
-            WeightTxtBox.Text = "";
-            StateTxtBox.Text = "";
-            AnimalTypeTxt.SelectedIndex=0;
-            LastConsultDateTxtBox.Text = "";
+            switch (page)
+            {
+                case 0:
+                    // Clear text boxes
+                    IdTxtBox.Clear();
+                    OwnerNameTxtBox.Clear();
+                    OwnerContactTxtBox.Clear();
+                    BreedTxtBox.Clear();
+                    WeightTxtBox.Clear();
+                    StateTxtBox.Clear();
+                    AnimalName_TxtBox.Clear();
+                    AnimalTypeTxt.SelectedIndex = 0;
+                    LastConsultDateTxtBox.Clear();
 
-            dataGridView1.DataSource = new DataTable();
+                    dataGridView1.DataSource = new DataTable();
 
-            // Reset radio buttons
-            SexM.Checked = true;
+                    // Reset radio buttons
+                    SexM.Checked = true;
 
-            // Reset date pickers
-            AnimalBirth.Value = DateTime.Now;
+                    // Reset date pickers
+                    AnimalBirth.Value = DateTime.Now;
+                    break;
+                case 1:
+                    AnimalIDTxtBox.Clear();
+                    AnimalNameTxtBox.Clear();
+                    OwnerNameTxtBox2.Clear();
+                    MedicActIDTxtBox.Clear();
+                    MedicActTxtBox.Clear();
+                    MedicActDateTxtBox.Clear();
+                    LastUpdateTxtBox.Clear();
+                    DescMedicActTxtBox.Clear();
+                    SearchTxtBox2.Clear();
+                    PriceTxtBox.Clear();
+
+                    dataGridView2.DataSource = new DataTable();
+
+                    SearchFilterTxt2.SelectedIndex = 0;
+                    break;
+                default:
+                    ClearAllInputs(0);
+                    ClearAllInputs(1);
+                    break;
+                
+            }
+        }
+
+        private void SelectDummyBtn_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedIndex = 0;
+            SearchTxtBox.Focus();
+        }
+
+        private void ClearBtn_Click(object sender, EventArgs e)
+        {
+            ClearAllInputs(0);
+        }
+
+        private void ClearBtn2_Click(object sender, EventArgs e)
+        {
+            ClearAllInputs(1);
+        }
+
+        private void SearchBtn2_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

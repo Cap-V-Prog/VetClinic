@@ -1,5 +1,7 @@
 -- Criar o banco de dados
-CREATE DATABASE IF NOT EXISTS VetClinic;
+DROP DATABASE IF EXISTS VetClinic;
+
+CREATE DATABASE VetClinic;
 
 -- Usar o banco de dados criado
 USE VetClinic;
@@ -7,15 +9,16 @@ USE VetClinic;
 -- Tabela para cadastro de animais domésticos
 CREATE TABLE IF NOT EXISTS Animal (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_animal VARCHAR(100),
     nome_dono VARCHAR(100),
-    contato_dono VARCHAR(20),
+    contato_dono CHAR(9),
     data_nascimento DATE,
     data_ultima_consulta DATE,
-    tipo_animal VARCHAR(50),
+    tipo_animal ENUM('Cão', 'Gato', 'Ave'),
     raca VARCHAR(50),
     sexo VARCHAR(1),
     peso DECIMAL(5,2),
-    data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_registro DATE,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
 
@@ -32,12 +35,14 @@ CREATE TABLE IF NOT EXISTS Produto (
 -- Tabela para registro de atos médicos
 CREATE TABLE IF NOT EXISTS AtosMedicos (
     id_ato_medico INT AUTO_INCREMENT PRIMARY KEY,
+    id_animal INT,
     ato_medico VARCHAR(100),
     descricao_ato_medico TEXT,
     custo_unitario DECIMAL(8,2),
-    data_insercao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    data_ultima_alteracao TIMESTAMP,
-    estado ENUM('ativo', 'inativo') DEFAULT 'ativo'
+    data_insercao DATE,
+    data_ultima_alteracao DATE,
+    estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
+    FOREIGN KEY (id_animal) REFERENCES Animal(id)
 );
 
 -- Tabela para registro de ficha médica do animal
