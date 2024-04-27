@@ -14,6 +14,7 @@ namespace VetClinic_UI
         MySQLConnectionManager _connectionManager = new MySQLConnectionManager("vetclinic");
         
         private AnimalManager _animalManager;
+        private MedicActManager _medicActManager;
         
         public Form1()
         {
@@ -22,6 +23,7 @@ namespace VetClinic_UI
             SexM.Checked = true;
             AnimalTypeTxt.SelectedIndex=0;
             SearchFilter.SelectedIndex = 4;
+            SearchFilterTxt2.SelectedIndex = 3;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -137,7 +139,6 @@ namespace VetClinic_UI
                     }
                 }
             }
-            
         }
 
         private void IdTxtBox_TextChanged(object sender, EventArgs e)
@@ -219,7 +220,8 @@ namespace VetClinic_UI
                         _connectionManager = new MySQLConnectionManager("vetclinic");
                         _animalManager = new AnimalManager(_connectionManager);
                         decimal peso = decimal.Parse(WeightTxtBox.Text.Replace(",", "").Replace(".", "")) / 100;
-                        _animalManager.AddAnimal(AnimalNameTxtBox.Text,OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
+                        _animalManager.AddAnimal(AnimalNameTxtBox.Text, OwnerNameTxtBox.Text, OwnerContactTxtBox.Text,
+                            AnimalBirth.Value,
                             DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", peso);
 
                         ClearAllInputs(0);
@@ -231,6 +233,10 @@ namespace VetClinic_UI
                     {
                         MessageBox.Show(@"Ocorreu um erro ao adicionar o novo registo: " + ex.Message, @"Erro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        _connectionManager.CloseConnection();
                     }
                 }
             }
@@ -276,6 +282,47 @@ namespace VetClinic_UI
             return true;
         }
         
+        private bool CheckInputs2(bool checkAnimalId = true, bool checkMedicActId = true, bool checkMedicAct = true, bool checkDescMedicAct = true, bool checkPrice = true)
+        {
+            if (checkAnimalId && string.IsNullOrEmpty(AnimalIDTxtBox.Text))
+            {
+                MessageBox.Show(@"Por favor, selecione o ID do animal.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                tabControl1.SelectedIndex = 0;
+                SearchTxtBox.Focus();
+                return false;
+            }
+
+            if (checkMedicActId && string.IsNullOrEmpty(MedicActIDTxtBox.Text))
+            {
+                MessageBox.Show(@"Por favor, selecione o ID da atividade médica.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SearchTxtBox2.Focus(); // Focus the MedicActIDTxtBox
+                return false;
+            }
+
+            if (checkMedicAct && string.IsNullOrEmpty(MedicActTxtBox.Text))
+            {
+                MessageBox.Show(@"Por favor, preencha a atividade médica.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MedicActTxtBox.Focus(); // Focus the MedicActTxtBox
+                return false;
+            }
+
+            if (checkDescMedicAct && string.IsNullOrEmpty(DescMedicActTxtBox.Text))
+            {
+                MessageBox.Show(@"Por favor, preencha a descrição da atividade médica.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DescMedicActTxtBox.Focus(); // Focus the DescMedicActTxtBox
+                return false;
+            }
+
+            if (checkPrice && string.IsNullOrEmpty(PriceTxtBox.Text))
+            {
+                MessageBox.Show(@"Por favor, preencha o preço.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                PriceTxtBox.Focus(); // Focus the PriceTxtBox
+                return false;
+            }
+
+            return true;
+        }
+        
         private void OwnerContactTxtBox_Validating(object sender, CancelEventArgs e)
         {
             // Check if the contact number has exactly 9 digits
@@ -296,7 +343,14 @@ namespace VetClinic_UI
 
                 // Retrieve data from the selected row
                 IdTxtBox.Text = selectedRow.Cells["id"].Value.ToString();
+                AnimalIDTxtBox.Text = selectedRow.Cells["id"].Value.ToString();
+
+                AnimalNameTxtBox.Text = selectedRow.Cells["nome_animal"].Value.ToString();
+                AnimalNameTxtBox2.Text = selectedRow.Cells["nome_animal"].Value.ToString();
+                
                 OwnerNameTxtBox.Text = selectedRow.Cells["nome_dono"].Value.ToString();
+                OwnerNameTxtBox2.Text = selectedRow.Cells["nome_dono"].Value.ToString();
+                
                 OwnerContactTxtBox.Text = selectedRow.Cells["contato_dono"].Value.ToString();
                 BreedTxtBox.Text = selectedRow.Cells["raca"].Value.ToString();
                 
@@ -391,14 +445,62 @@ namespace VetClinic_UI
 
         private void SearchBtn2_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            _connectionManager = new MySQLConnectionManager("vetclinic");
+            _medicActManager = new MedicActManager(_connectionManager);
+                
+            if (string.IsNullOrEmpty(SearchTxtBox2.Text) && SearchFilterTxt2.SelectedIndex!=3)
+            {
+                MessageBox.Show(@"Por favor, insira um termo de pesquisa.", @"Consulta Vazia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SearchTxtBox.Focus();
+            }
+            else
+            {
+                if (!int.TryParse(SearchTxtBox2.Text, out _) && SearchFilterTxt2.SelectedIndex==0)
+                {
+                    MessageBox.Show(@"Por favor, insira um número válido.", @"Entrada Inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SearchTxtBox.Clear();
+                    SearchTxtBox.Focus();
+                }
+                else
+                {
+                    dataGridView2.DataSource=_medicActManager.SearchMedicActs(SearchFilterTxt2.SelectedIndex,SearchTxtBox2.Text);
+                }
+            }
         }
 
         private void NewUpdateActBtn_Click(object sender, EventArgs e)
         {
             if (_updateMode2)
             {
-                
+                if (CheckInputs2())
+                {
+                    
+                }
+            }
+            else
+            {
+                if (CheckInputs2(checkMedicActId:false))
+                {
+                    try
+                    {
+                        _connectionManager = new MySQLConnectionManager("vetclinic");
+                        _medicActManager = new MedicActManager(_connectionManager);
+                    
+                        _medicActManager.AddMedicAct(int.Parse(AnimalIDTxtBox.Text),MedicActTxtBox.Text,DescMedicActTxtBox.Text,decimal.Parse(PriceTxtBox.Text));
+
+                        ClearAllInputs(1);
+
+                        MessageBox.Show(@"Novo registo adicionado com sucesso!", @"Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(@"Ocorreu um erro ao adicionar o novo registo: " + ex.Message, @"Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        _connectionManager.CloseConnection();
+                    }
+                }
             }
         }
 
@@ -431,7 +533,7 @@ namespace VetClinic_UI
 
         private void AnimalIDTxtBox_TextChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(AnimalIDTxtBox.Text))
+            if (string.IsNullOrEmpty(MedicActIDTxtBox.Text))
             {
                 _updateMode2 = false;
             }
