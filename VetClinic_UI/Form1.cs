@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace VetClinic_UI
 {
     public partial class Form1 : Form
     {
-        private bool EraseMode = false;
-        private bool UpdateMode = false;
-        MySQLConnectionManager connectionManager = new MySQLConnectionManager("vetclinic");
+        private bool _eraseMode;
+        private bool _updateMode;
+        private bool _updateMode2;
+        MySQLConnectionManager _connectionManager = new MySQLConnectionManager("vetclinic");
         
-        private AnimalManager animalManager;
+        private AnimalManager _animalManager;
         
         public Form1()
         {
@@ -31,38 +28,38 @@ namespace VetClinic_UI
         {
             if (DelConfirm.Checked)
             {
-                MessageBox.Show("Atencão esta opção permite remover completamente um registo da base de dados!",
-                    "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                DelDeactiveBtn.Text = "Remover registo";
-                EraseMode = true;
+                MessageBox.Show(@"Atencão esta opção permite remover completamente um registo da base de dados!",
+                    @"Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DelDeactiveBtn.Text = @"Remover registo";
+                _eraseMode = true;
             }
             else
             {
-                DelDeactiveBtn.Text = "Desativar";
-                EraseMode = false;
+                DelDeactiveBtn.Text = @"Desativar";
+                _eraseMode = false;
             }
         }
 
         private void DelDeactiveBtn_Click(object sender, EventArgs e)
         {
-            if (EraseMode)
+            if (_eraseMode)
             {
-                DialogResult choice = MessageBox.Show("Tem a certesa que quer apagar definitivamente este registo! (esta ação nao pode ser revertida)",
-                    "Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult choice = MessageBox.Show(@"Tem a certesa que quer apagar definitivamente este registo! (esta ação nao pode ser revertida)",
+                    @"Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (choice == DialogResult.Yes)
                 {
                     //Delete
-                    connectionManager = new MySQLConnectionManager("vetclinic");
-                    animalManager = new AnimalManager(connectionManager);
+                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                    _animalManager = new AnimalManager(_connectionManager);
                     
-                    MessageBox.Show("Registo apagado com sucesso!",
-                        "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"Registo apagado com sucesso!",
+                        @"Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
                     //Cancel
-                    MessageBox.Show("Ação cancelada!",
-                        "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"Ação cancelada!",
+                        @"Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
@@ -71,22 +68,22 @@ namespace VetClinic_UI
                 //Deactivate
                 if (string.IsNullOrEmpty(IdTxtBox.Text))
                 {
-                    MessageBox.Show("Por favor, selecione o animal que deseja desativar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(@"Por favor, selecione o animal que deseja desativar.", @"Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
                     // Prompt the user for confirmation
-                    DialogResult confirmResult = MessageBox.Show("Tem a certeza que deseja desativar este animal?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult confirmResult = MessageBox.Show(@"Tem a certeza que deseja desativar este animal?", @"Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
     
                     if (confirmResult == DialogResult.Yes)
                     {
                         // Deactivate the animal
-                        connectionManager = new MySQLConnectionManager("vetclinic");
-                        animalManager = new AnimalManager(connectionManager);
-                        animalManager.DeactivateAnimal(int.Parse(IdTxtBox.Text));
-                        MessageBox.Show("O animal foi desativado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        _connectionManager = new MySQLConnectionManager("vetclinic");
+                        _animalManager = new AnimalManager(_connectionManager);
+                        _animalManager.DeactivateAnimal(int.Parse(IdTxtBox.Text));
+                        MessageBox.Show(@"O animal foi desativado com sucesso.", @"Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
         
-                        ClearAllInputs();
+                        ClearAllInputs(0);
                     }
                 }
             }
@@ -112,31 +109,31 @@ namespace VetClinic_UI
 
         private void SearchBtn_Click(object sender, EventArgs e)
         {
-            connectionManager = new MySQLConnectionManager("vetclinic");
-            animalManager = new AnimalManager(connectionManager);
+            _connectionManager = new MySQLConnectionManager("vetclinic");
+            _animalManager = new AnimalManager(_connectionManager);
             
             if (SearchFilter.SelectedIndex == 3)
             {
-                dataGridView1.DataSource=animalManager.SearchAnimals(3, SearchAnimalType.Text);
+                dataGridView1.DataSource=_animalManager.SearchAnimals(3, SearchAnimalType.Text);
             }
             else
             {
                 if (string.IsNullOrEmpty(SearchTxtBox.Text) && SearchFilter.SelectedIndex!=4)
                 {
-                    MessageBox.Show("Por favor, insira um termo de pesquisa.", "Consulta Vazia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(@"Por favor, insira um termo de pesquisa.", @"Consulta Vazia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     SearchTxtBox.Focus();
                 }
                 else
                 {
                     if (!int.TryParse(SearchTxtBox.Text, out _) && SearchFilter.SelectedIndex==0)
                     {
-                        MessageBox.Show("Por favor, insira um número válido.", "Entrada Inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(@"Por favor, insira um número válido.", @"Entrada Inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         SearchTxtBox.Clear();
                         SearchTxtBox.Focus();
                     }
                     else
                     {
-                        dataGridView1.DataSource=animalManager.SearchAnimals(SearchFilter.SelectedIndex, SearchTxtBox.Text);
+                        dataGridView1.DataSource=_animalManager.SearchAnimals(SearchFilter.SelectedIndex, SearchTxtBox.Text);
                     }
                 }
             }
@@ -160,22 +157,22 @@ namespace VetClinic_UI
             if (updatemode)
             {
                 //Update 
-                AddNewUpdateBtn.Text = "Atualizar registo";
+                AddNewUpdateBtn.Text = @"Atualizar registo";
                 AddNewUpdateBtn.Size = new Size(107, 46); //Default
                 AddNewUpdateBtn.Location = new Point(625, 148); // Default
                 
-                UpdateMode = true;
+                _updateMode = true;
                 DelDeactiveBtn.Visible = true;
                 DelConfirm.Visible = true;
             }
             else
             {
                 //Add New
-                AddNewUpdateBtn.Text = "Adicionar novo";
+                AddNewUpdateBtn.Text = @"Adicionar novo";
                 AddNewUpdateBtn.Size = new Size(272, 46); // Altered
                 AddNewUpdateBtn.Location = new Point(460, 148); // Altered
                 
-                UpdateMode = false;
+                _updateMode = false;
                 DelDeactiveBtn.Visible = false;
                 DelConfirm.Visible = false;
             }
@@ -183,45 +180,33 @@ namespace VetClinic_UI
 
         private void AddNewUpdateBtn_Click(object sender, EventArgs e)
         {
-            if (UpdateMode)
+            if (_updateMode)
             {
                 if (!string.IsNullOrEmpty(IdTxtBox.Text))
                 {
-                    int selectedAnimalId = Convert.ToInt32(IdTxtBox.Text);
-                    
-                    DialogResult result = MessageBox.Show("Tem certeza que deseja atualizar este registro?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult result = MessageBox.Show(@"Tem certeza que deseja atualizar este registro?", @"Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     
                     if (result == DialogResult.Yes)
                     {
                         if(CheckInputs())
                         {
-                            // Retrieve the updated information from the input fields
-                            string nomeDono = OwnerNameTxtBox.Text;
-                            string contatoDono = OwnerContactTxtBox.Text;
-                            DateTime dataNascimento = AnimalBirth.Value;
-                            DateTime dataUltimaConsulta = DateTime.Now;
-                            string tipoAnimal = AnimalTypeTxt.Text;
-                            string raca = BreedTxtBox.Text;
-                            string sexo = SexM.Checked ? "M" : "F";
-                            decimal peso = decimal.Parse(WeightTxtBox.Text);
-
                             // Update the animal record
-                            connectionManager = new MySQLConnectionManager("vetclinic");
-                            animalManager = new AnimalManager(connectionManager);
-                            animalManager.UpdateAnimal(selectedAnimalId, nomeDono, contatoDono, dataNascimento,
-                                dataUltimaConsulta, tipoAnimal, raca, sexo, peso);
+                            _connectionManager = new MySQLConnectionManager("vetclinic");
+                            _animalManager = new AnimalManager(_connectionManager);
+                            _animalManager.UpdateAnimal(Convert.ToInt32(IdTxtBox.Text), AnimalNameTxtBox.Text,OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
+                                DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", decimal.Parse(WeightTxtBox.Text));
 
                             // Show a success message
-                            MessageBox.Show("Registro atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK,
+                            MessageBox.Show(@"Registro atualizado com sucesso!", @"Sucesso", MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
-                            ClearAllInputs();
+                            ClearAllInputs(0);
                         }
                     }
                 }
                 else
                 {
                     // If no animal is selected, display an error message
-                    MessageBox.Show("Por favor, selecione um animal para atualizar.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"Por favor, selecione um animal para atualizar.", @"Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -231,20 +216,20 @@ namespace VetClinic_UI
                 {
                     try
                     {
-                        connectionManager = new MySQLConnectionManager("vetclinic");
-                        animalManager = new AnimalManager(connectionManager);
+                        _connectionManager = new MySQLConnectionManager("vetclinic");
+                        _animalManager = new AnimalManager(_connectionManager);
                         decimal peso = decimal.Parse(WeightTxtBox.Text.Replace(",", "").Replace(".", "")) / 100;
-                        animalManager.AddAnimal(OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
+                        _animalManager.AddAnimal(AnimalNameTxtBox.Text,OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
                             DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", peso);
 
-                        ClearAllInputs();
+                        ClearAllInputs(0);
 
-                        MessageBox.Show("Novo registo adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK,
+                        MessageBox.Show(@"Novo registo adicionado com sucesso!", @"Sucesso", MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Ocorreu um erro ao adicionar o novo registo: " + ex.Message, "Erro",
+                        MessageBox.Show(@"Ocorreu um erro ao adicionar o novo registo: " + ex.Message, @"Erro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -255,35 +240,35 @@ namespace VetClinic_UI
         {
             if (checkOwnerName && string.IsNullOrEmpty(OwnerNameTxtBox.Text))
             {
-                MessageBox.Show("Por favor, preencha o nome do dono.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Por favor, preencha o nome do dono.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 OwnerNameTxtBox.Focus(); // Focus the OwnerNameTxtBox
                 return false;
             }
 
             if (checkOwnerContact && string.IsNullOrEmpty(OwnerContactTxtBox.Text))
             {
-                MessageBox.Show("Por favor, preencha o contato do dono.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Por favor, preencha o contato do dono.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 OwnerContactTxtBox.Focus(); // Focus the OwnerContactTxtBox
                 return false;
             }
 
             if (checkAnimalType && AnimalTypeTxt.SelectedIndex == -1)
             {
-                MessageBox.Show("Por favor, selecione o tipo de animal.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Por favor, selecione o tipo de animal.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 AnimalTypeTxt.Focus(); // Focus the AnimalTypeTxt
                 return false;
             }
 
             if (checkBreed && string.IsNullOrEmpty(BreedTxtBox.Text))
             {
-                MessageBox.Show("Por favor, preencha a raça do animal.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Por favor, preencha a raça do animal.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 BreedTxtBox.Focus(); // Focus the BreedTxtBox
                 return false;
             }
 
             if (checkWeight && string.IsNullOrEmpty(WeightTxtBox.Text))
             {
-                MessageBox.Show("Por favor, preencha o peso do animal.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Por favor, preencha o peso do animal.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 WeightTxtBox.Focus(); // Focus the WeightTxtBox
                 return false;
             }
@@ -296,7 +281,7 @@ namespace VetClinic_UI
             // Check if the contact number has exactly 9 digits
             if (OwnerContactTxtBox.Text.Length != 9)
             {
-                MessageBox.Show("O número de contato deve ter 9 dígitos.", "Número Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"O número de contato deve ter 9 dígitos.", @"Número Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
         }
@@ -340,25 +325,120 @@ namespace VetClinic_UI
             }
         }
         
-        private void ClearAllInputs()
+        private void ClearAllInputs(int page)
         {
-            // Clear text boxes
-            IdTxtBox.Text = "";
-            OwnerNameTxtBox.Text = "";
-            OwnerContactTxtBox.Text = "";
-            BreedTxtBox.Text = "";
-            WeightTxtBox.Text = "";
-            StateTxtBox.Text = "";
-            AnimalTypeTxt.SelectedIndex=0;
-            LastConsultDateTxtBox.Text = "";
+            switch (page)
+            {
+                case 0:
+                    // Clear text boxes
+                    IdTxtBox.Clear();
+                    OwnerNameTxtBox.Clear();
+                    OwnerContactTxtBox.Clear();
+                    BreedTxtBox.Clear();
+                    WeightTxtBox.Clear();
+                    StateTxtBox.Clear();
+                    AnimalNameTxtBox.Clear();
+                    AnimalTypeTxt.SelectedIndex = 0;
+                    LastConsultDateTxtBox.Clear();
 
-            dataGridView1.DataSource = new DataTable();
+                    dataGridView1.DataSource = new DataTable();
 
-            // Reset radio buttons
-            SexM.Checked = true;
+                    // Reset radio buttons
+                    SexM.Checked = true;
 
-            // Reset date pickers
-            AnimalBirth.Value = DateTime.Now;
+                    // Reset date pickers
+                    AnimalBirth.Value = DateTime.Now;
+                    break;
+                case 1:
+                    AnimalIDTxtBox.Clear();
+                    AnimalNameTxtBox.Clear();
+                    OwnerNameTxtBox2.Clear();
+                    MedicActIDTxtBox.Clear();
+                    MedicActTxtBox.Clear();
+                    MedicActDateTxtBox.Clear();
+                    LastUpdateTxtBox.Clear();
+                    DescMedicActTxtBox.Clear();
+                    SearchTxtBox2.Clear();
+                    PriceTxtBox.Clear();
+
+                    dataGridView2.DataSource = new DataTable();
+
+                    SearchFilterTxt2.SelectedIndex = 0;
+                    break;
+                default:
+                    ClearAllInputs(0);
+                    ClearAllInputs(1);
+                    break;
+                
+            }
+        }
+
+        private void SelectDummyBtn_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedIndex = 0;
+            SearchTxtBox.Focus();
+        }
+
+        private void ClearBtn_Click(object sender, EventArgs e)
+        {
+            ClearAllInputs(0);
+        }
+
+        private void ClearBtn2_Click(object sender, EventArgs e)
+        {
+            ClearAllInputs(1);
+        }
+
+        private void SearchBtn2_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void NewUpdateActBtn_Click(object sender, EventArgs e)
+        {
+            if (_updateMode2)
+            {
+                
+            }
+        }
+
+        private void DelActBtn_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        private void DataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Check if the double-clicked cell is not a header cell and that a row is selected
+            if (e.RowIndex >= 0 && dataGridView2.SelectedRows.Count > 0)
+            {
+                // Get the selected row
+                DataGridViewRow selectedRow = dataGridView2.SelectedRows[0];
+
+                // Retrieve data from the selected row
+                MedicActIDTxtBox.Text = selectedRow.Cells["id_ato_medico"].Value.ToString();
+                AnimalIDTxtBox.Text = selectedRow.Cells["id_animal"].Value.ToString();
+                AnimalNameTxtBox2.Text = "";
+                OwnerNameTxtBox2.Text = "";
+                
+                MedicActTxtBox.Text = selectedRow.Cells["ato_medico"].Value.ToString();
+                DescMedicActTxtBox.Text = selectedRow.Cells["descricao_ato_medico"].Value.ToString();
+                PriceTxtBox.Text = selectedRow.Cells["custo_unitario"].Value.ToString();
+                MedicActDateTxtBox.Text = selectedRow.Cells["data_insercao"].Value.ToString();
+                LastUpdateTxtBox.Text = selectedRow.Cells["data_ultima_alteracao"].Value.ToString();
+            }
+        }
+
+        private void AnimalIDTxtBox_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(AnimalIDTxtBox.Text))
+            {
+                _updateMode2 = false;
+            }
+            else
+            {
+                _updateMode2 = true;
+            }
         }
     }
 }
