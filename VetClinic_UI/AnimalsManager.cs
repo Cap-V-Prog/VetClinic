@@ -7,11 +7,11 @@ namespace VetClinic_UI
 {
     public class AnimalManager
     {
-        private MySQLConnectionManager connectionManager;
+        private MySQLConnectionManager _connectionManager;
 
         public AnimalManager(MySQLConnectionManager connectionManager)
         {
-            this.connectionManager = connectionManager;
+           _connectionManager = connectionManager;
         }
 
         public DataTable SearchAnimals(int searchBy, string searchText)
@@ -41,7 +41,7 @@ namespace VetClinic_UI
 
             DataTable dataTable = new DataTable();
 
-            using (MySqlConnection connection = connectionManager.GetConnection())
+            using (MySqlConnection connection = _connectionManager.GetConnection())
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -60,7 +60,7 @@ namespace VetClinic_UI
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("Erro: " + e);
+                        MessageBox.Show(@"Erro: " + e);
                     }
                     finally
                     {
@@ -77,7 +77,7 @@ namespace VetClinic_UI
             string query = "INSERT INTO Animal (nome_animal,nome_dono, contato_dono, data_nascimento, data_ultima_consulta, tipo_animal, raca, sexo, peso, data_registro, estado) " +
                            "VALUES (@nomeAnimal,@nomeDono, @contatoDono, @dataNascimento, @dataUltimaConsulta, @tipoAnimal, @raca, @sexo, @peso, CURRENT_TIMESTAMP, 'ativo')";
 
-            using (MySqlConnection connection = connectionManager.GetConnection())
+            using (MySqlConnection connection = _connectionManager.GetConnection())
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -104,7 +104,7 @@ namespace VetClinic_UI
                            "data_ultima_consulta = @dataUltimaConsulta, tipo_animal = @tipoAnimal, raca = @raca, sexo = @sexo, " +
                            "peso = @peso WHERE id = @id";
 
-            using (MySqlConnection connection = connectionManager.GetConnection())
+            using (MySqlConnection connection = _connectionManager.GetConnection())
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -126,7 +126,7 @@ namespace VetClinic_UI
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("Erro: " + e);
+                        MessageBox.Show(@"Erro: " + e);
                     }
                     finally
                     {
@@ -140,7 +140,7 @@ namespace VetClinic_UI
         {
             string query = "UPDATE Animal SET estado = 'inativo' WHERE id = @animalId";
 
-            using (MySqlConnection connection = connectionManager.GetConnection())
+            using (MySqlConnection connection = _connectionManager.GetConnection())
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -153,7 +153,7 @@ namespace VetClinic_UI
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("Erro: " + e);
+                        MessageBox.Show(@"Erro: " + e);
                     }
                     finally
                     {
@@ -163,5 +163,76 @@ namespace VetClinic_UI
             }
         }
         
+        // Method to retrieve owner name based on animal ID
+        public string GetOwnerName(int animalId)
+        {
+            string ownerName = ""; // Initialize the variable to store the owner name
+
+            // Write the SQL query to retrieve the owner name based on the animal ID
+            string query = "SELECT nome_dono FROM Animal WHERE id = @AnimalID";
+
+            // Create a MySqlConnection object and a MySqlCommand object
+            using (MySqlConnection connection = _connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    // Add parameter to the MySqlCommand to prevent SQL injection
+                    command.Parameters.AddWithValue("@AnimalID", animalId);
+
+                    // Open the connection
+                    connection.Open();
+
+                    // Execute the query to retrieve the owner name
+                    object result = command.ExecuteScalar();
+
+                    // Check if the result is not null
+                    if (result != null)
+                    {
+                        // Convert the result to string and assign it to the ownerName variable
+                        ownerName = result.ToString();
+                    }
+                }
+            }
+            
+            _connectionManager.CloseConnection();
+            // Return the retrieved owner name
+            return ownerName;
+        }
+        
+        // Method to retrieve animal name based on animal ID
+        public string GetAnimalName(int animalId)
+        {
+            string animalName = ""; // Initialize the variable to store the animal name
+
+            // Write the SQL query to retrieve the animal name based on the animal ID
+            string query = "SELECT nome_animal FROM Animal WHERE id = @AnimalID";
+
+            // Create a MySqlConnection object and a MySqlCommand object
+            using (MySqlConnection connection = _connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    // Add parameter to the MySqlCommand to prevent SQL injection
+                    command.Parameters.AddWithValue("@AnimalID", animalId);
+
+                    // Open the connection
+                    connection.Open();
+
+                    // Execute the query to retrieve the animal name
+                    object result = command.ExecuteScalar();
+
+                    // Check if the result is not null
+                    if (result != null)
+                    {
+                        // Convert the result to string and assign it to the animalName variable
+                        animalName = result.ToString();
+                    }
+                }
+            }
+            
+            _connectionManager.CloseConnection();
+            // Return the retrieved animal name
+            return animalName;
+        }
     }
 }

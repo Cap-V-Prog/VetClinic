@@ -90,7 +90,7 @@
             this.MedicActDateTxtBox = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.PriceTxtBox = new System.Windows.Forms.TextBox();
+            this.PriceTxtBox = new System.Windows.Forms.MaskedTextBox();
             this.MedicActTxtBox = new System.Windows.Forms.TextBox();
             this.DescMedicActTxtBox = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
@@ -514,10 +514,10 @@
             this.WeightTxtBox.Mask = "#####.##";
             this.WeightTxtBox.Name = "WeightTxtBox";
             this.WeightTxtBox.PromptChar = '0';
-            this.WeightTxtBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.WeightTxtBox.Size = new System.Drawing.Size(63, 20);
             this.WeightTxtBox.TabIndex = 7;
             this.WeightTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.WeightTxtBox.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             // 
             // label2
             // 
@@ -653,7 +653,6 @@
             this.AnimalIDTxtBox.ReadOnly = true;
             this.AnimalIDTxtBox.Size = new System.Drawing.Size(232, 20);
             this.AnimalIDTxtBox.TabIndex = 22;
-            this.AnimalIDTxtBox.TextChanged += new System.EventHandler(this.AnimalIDTxtBox_TextChanged);
             // 
             // AnimalNameTxtBox2
             // 
@@ -712,6 +711,7 @@
             this.MedicActIDTxtBox.ReadOnly = true;
             this.MedicActIDTxtBox.Size = new System.Drawing.Size(240, 20);
             this.MedicActIDTxtBox.TabIndex = 35;
+            this.MedicActIDTxtBox.TextChanged += new System.EventHandler(this.MedicActIDTxtBox_TextChanged);
             // 
             // label18
             // 
@@ -764,9 +764,13 @@
             // PriceTxtBox
             // 
             this.PriceTxtBox.Location = new System.Drawing.Point(430, 176);
+            this.PriceTxtBox.Mask = "########.##";
             this.PriceTxtBox.Name = "PriceTxtBox";
+            this.PriceTxtBox.PromptChar = '0';
             this.PriceTxtBox.Size = new System.Drawing.Size(105, 20);
-            this.PriceTxtBox.TabIndex = 35;
+            this.PriceTxtBox.TabIndex = 38;
+            this.PriceTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.PriceTxtBox.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             // 
             // MedicActTxtBox
             // 
@@ -852,6 +856,7 @@
             this.dataGridView2.ShowRowErrors = false;
             this.dataGridView2.Size = new System.Drawing.Size(922, 224);
             this.dataGridView2.TabIndex = 3;
+            this.dataGridView2.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView2_CellDoubleClick);
             // 
             // SearchFilterTxt2
             // 
@@ -863,6 +868,7 @@
             this.SearchFilterTxt2.Size = new System.Drawing.Size(121, 21);
             this.SearchFilterTxt2.TabIndex = 2;
             this.SearchFilterTxt2.ValueMember = "0";
+            this.SearchFilterTxt2.SelectedIndexChanged += new System.EventHandler(this.SearchFilterTxt2_SelectedIndexChanged);
             // 
             // SearchTxtBox2
             // 
@@ -917,6 +923,8 @@
             this.ResumeLayout(false);
         }
 
+        private System.Windows.Forms.MaskedTextBox PriceTxtBox;
+
         private System.Windows.Forms.TextBox MedicActIDTxtBox;
         private System.Windows.Forms.Label label22;
 
@@ -924,7 +932,6 @@
         private System.Windows.Forms.TextBox OwnerNameTxtBox2;
         private System.Windows.Forms.TextBox LastUpdateTxtBox;
         private System.Windows.Forms.TextBox MedicActDateTxtBox;
-        private System.Windows.Forms.TextBox PriceTxtBox;
         private System.Windows.Forms.TextBox MedicActTxtBox;
         private System.Windows.Forms.TextBox DescMedicActTxtBox;
 
