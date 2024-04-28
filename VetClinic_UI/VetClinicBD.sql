@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS AtosMedicos (
     ato_medico VARCHAR(100),
     descricao_ato_medico TEXT,
     custo_unitario DECIMAL(8,2),
-    data_insercao DATE,
-    data_ultima_alteracao DATE,
+    data_insercao DATETIME,
+    data_ultima_alteracao DATETIME,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
     FOREIGN KEY (id_animal) REFERENCES Animal(id)
 );

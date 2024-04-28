@@ -20,6 +20,7 @@ namespace VetClinic_UI
         {
             InitializeComponent();
             IdTxtBox_TextChanged(null,null);
+            MedicActIDTxtBox_TextChanged(null,null);
             SexM.Checked = true;
             AnimalTypeTxt.SelectedIndex=0;
             SearchFilter.SelectedIndex = 4;
@@ -116,6 +117,7 @@ namespace VetClinic_UI
             
             if (SearchFilter.SelectedIndex == 3)
             {
+                dataGridView2.DataSource = new DataTable();
                 dataGridView1.DataSource=_animalManager.SearchAnimals(3, SearchAnimalType.Text);
             }
             else
@@ -135,6 +137,7 @@ namespace VetClinic_UI
                     }
                     else
                     {
+                        dataGridView2.DataSource = new DataTable();
                         dataGridView1.DataSource=_animalManager.SearchAnimals(SearchFilter.SelectedIndex, SearchTxtBox.Text);
                     }
                 }
@@ -191,16 +194,24 @@ namespace VetClinic_UI
                     {
                         if(CheckInputs())
                         {
-                            // Update the animal record
-                            _connectionManager = new MySQLConnectionManager("vetclinic");
-                            _animalManager = new AnimalManager(_connectionManager);
-                            _animalManager.UpdateAnimal(Convert.ToInt32(IdTxtBox.Text), AnimalNameTxtBox.Text,OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
-                                DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", decimal.Parse(WeightTxtBox.Text));
-
-                            // Show a success message
-                            MessageBox.Show(@"Registro atualizado com sucesso!", @"Sucesso", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
-                            ClearAllInputs(0);
+                            try
+                            {
+                                // Update the animal record
+                                _connectionManager = new MySQLConnectionManager("vetclinic");
+                                _animalManager = new AnimalManager(_connectionManager);
+                                _animalManager.UpdateAnimal(Convert.ToInt32(IdTxtBox.Text), AnimalNameTxtBox.Text,OwnerNameTxtBox.Text, OwnerContactTxtBox.Text, AnimalBirth.Value,
+                                    DateTime.Now, AnimalTypeTxt.Text, BreedTxtBox.Text, SexM.Checked ? "M" : "F", Convert.ToDecimal(WeightTxtBox.Text));
+  
+                                // Show a success message
+                                MessageBox.Show(@"Registro atualizado com sucesso!", @"Sucesso", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
+                                ClearAllInputs(0);
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show(@"Não foi possivel atualizar o registo!", @"Erro", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                            }
                         }
                     }
                 }
@@ -405,7 +416,7 @@ namespace VetClinic_UI
                     break;
                 case 1:
                     AnimalIDTxtBox.Clear();
-                    AnimalNameTxtBox.Clear();
+                    AnimalNameTxtBox2.Clear();
                     OwnerNameTxtBox2.Clear();
                     MedicActIDTxtBox.Clear();
                     MedicActTxtBox.Clear();
@@ -417,7 +428,7 @@ namespace VetClinic_UI
 
                     dataGridView2.DataSource = new DataTable();
 
-                    SearchFilterTxt2.SelectedIndex = 0;
+                    SearchFilterTxt2.SelectedIndex = 3;
                     break;
                 default:
                     ClearAllInputs(0);
@@ -463,6 +474,7 @@ namespace VetClinic_UI
                 }
                 else
                 {
+                    dataGridView2.DataSource = new DataTable();
                     dataGridView2.DataSource=_medicActManager.SearchMedicActs(SearchFilterTxt2.SelectedIndex,SearchTxtBox2.Text);
                 }
             }
@@ -474,7 +486,39 @@ namespace VetClinic_UI
             {
                 if (CheckInputs2())
                 {
+                    if (!string.IsNullOrEmpty(MedicActIDTxtBox.Text))
+                    {
+                        DialogResult result = MessageBox.Show(@"Tem certeza que deseja atualizar este registro?", @"Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     
+                        if (result == DialogResult.Yes)
+                        {
+                            if(CheckInputs2())
+                            {
+                                try
+                                {
+                                    // Update the act record
+                                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                                    _medicActManager = new MedicActManager(_connectionManager);
+                                    _medicActManager.UpdateMedicAct(int.Parse(MedicActIDTxtBox.Text),int.Parse(AnimalIDTxtBox.Text),MedicActTxtBox.Text,DescMedicActTxtBox.Text,decimal.Parse(PriceTxtBox.Text));
+                                    
+                                    // Show a success message
+                                    MessageBox.Show(@"Registro atualizado com sucesso!", @"Sucesso", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
+                                    ClearAllInputs(1);
+                                }
+                                catch (Exception)
+                                {
+                                    MessageBox.Show(@"Não foi possivel atualizar o registo!", @"Erro", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // If no animal is selected, display an error message
+                        MessageBox.Show(@"Por favor, selecione um ato médico para atualizar.", @"Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             else
@@ -506,7 +550,32 @@ namespace VetClinic_UI
 
         private void DelActBtn_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            DialogResult choice = MessageBox.Show(@"Tem a certesa que quer apagar definitivamente este registo! (esta ação nao pode ser revertida)",
+                @"Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (choice == DialogResult.Yes)
+            {
+                //Delete
+                if (!string.IsNullOrEmpty(MedicActIDTxtBox.Text))
+                {
+                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                    _medicActManager = new MedicActManager(_connectionManager);
+                    
+                    _medicActManager.DeleteMedicAct(int.Parse(MedicActIDTxtBox.Text));
+                    MessageBox.Show(@"Registo apagado com sucesso!",
+                        @"Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }else
+                {
+                    MessageBox.Show(@"Selecione um registo primeiro!",
+                        @"Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SearchTxtBox2.Focus();
+                }
+            }
+            else
+            {
+                //Cancel
+                MessageBox.Show(@"Ação cancelada!",
+                    @"Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
         
         private void DataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -520,27 +589,53 @@ namespace VetClinic_UI
                 // Retrieve data from the selected row
                 MedicActIDTxtBox.Text = selectedRow.Cells["id_ato_medico"].Value.ToString();
                 AnimalIDTxtBox.Text = selectedRow.Cells["id_animal"].Value.ToString();
-                AnimalNameTxtBox2.Text = "";
-                OwnerNameTxtBox2.Text = "";
+
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _animalManager = new AnimalManager(_connectionManager);
+                AnimalNameTxtBox2.Text = _animalManager.GetAnimalName(int.Parse(AnimalIDTxtBox.Text));
+                
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _animalManager = new AnimalManager(_connectionManager);
+                OwnerNameTxtBox2.Text = _animalManager.GetOwnerName(int.Parse(AnimalIDTxtBox.Text));
                 
                 MedicActTxtBox.Text = selectedRow.Cells["ato_medico"].Value.ToString();
                 DescMedicActTxtBox.Text = selectedRow.Cells["descricao_ato_medico"].Value.ToString();
-                PriceTxtBox.Text = selectedRow.Cells["custo_unitario"].Value.ToString();
+                
+                string value = selectedRow.Cells["custo_unitario"].Value.ToString();
+                decimal valueDecimal = decimal.Parse(value);
+                string formattedValue = valueDecimal.ToString("00000000.00");
+                
+                PriceTxtBox.Text = formattedValue;
                 MedicActDateTxtBox.Text = selectedRow.Cells["data_insercao"].Value.ToString();
                 LastUpdateTxtBox.Text = selectedRow.Cells["data_ultima_alteracao"].Value.ToString();
             }
         }
 
-        private void AnimalIDTxtBox_TextChanged(object sender, EventArgs e)
+        private void MedicActIDTxtBox_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(MedicActIDTxtBox.Text))
             {
                 _updateMode2 = false;
+                NewUpdateActBtn.Text = @"Inserir novo registo";
+                NewUpdateActBtn.Location = new Point(553, 111);
+                NewUpdateActBtn.Size = new Size(387, 100);
+                
+                DelActBtn.Visible = false;
             }
             else
             {
                 _updateMode2 = true;
+                NewUpdateActBtn.Text = @"Atualizar registo";
+                NewUpdateActBtn.Location = new Point(753, 111);
+                NewUpdateActBtn.Size = new Size(187, 100);
+                
+                DelActBtn.Visible = true;
             }
+        }
+
+        private void SearchFilterTxt2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SearchTxtBox2.Clear();
         }
     }
 }

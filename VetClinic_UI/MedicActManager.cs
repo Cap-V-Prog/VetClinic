@@ -24,13 +24,13 @@ namespace VetClinic_UI
                     query = $"SELECT AtosMedicos.* FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.id = {searchText}";
                     break;
                 case 1: // Nome do dono
-                    query = "SELECT * FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.nome_dono LIKE @searchText";
+                    query = "SELECT AtosMedicos.* FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.nome_dono LIKE @searchText";
                     break;
                 case 2: // Nome do animal
-                    query = "SELECT * FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.nome_animal LIKE @searchText";
+                    query = "SELECT AtosMedicos.* FROM AtosMedicos JOIN Animal ON AtosMedicos.id_animal = Animal.id WHERE Animal.nome_animal LIKE @searchText";
                     break;
                 case 3: // Search all medicacts
-                    query = "SELECT * FROM AtosMedicos";
+                    query = "SELECT AtosMedicos.* FROM AtosMedicos";
                     break;
                 default:
                     throw new ArgumentException("Opção de pesquisa inválida");
@@ -89,7 +89,7 @@ namespace VetClinic_UI
             }
         }
         
-        public void UpdateAnimal(int id, int animalId, string atoMedico, string descAtoMedico, decimal custoUnitario)
+        public void UpdateMedicAct(int id, int animalId, string atoMedico, string descAtoMedico, decimal custoUnitario)
         {
             string query = "UPDATE AtosMedicos SET id_animal = @animalId, ato_medico = @atoMedico,descricao_ato_medico = @descAtoMedico, custo_unitario = @custoUnitario, data_ultima_alteracao = CURDATE() WHERE id_ato_medico = @id";
 
@@ -119,5 +119,69 @@ namespace VetClinic_UI
                 }
             }
         }
+        
+        //DANGER FUNCTIONS
+        public void DeleteMedicAct(int medicActId)
+        {
+            // Delete related records in MateriaisUtilizados table
+            string deleteMateriaisQuery = "DELETE FROM MateriaisUtilizados WHERE id_ficha_medica IN (SELECT id_ficha_medica FROM FichaMedica WHERE ato_medico = @medicActId)";
+
+            // Delete related records in Diagnosticos table
+            string deleteDiagnosticosQuery = "DELETE FROM Diagnosticos WHERE id_ficha_medica IN (SELECT id_ficha_medica FROM FichaMedica WHERE ato_medico = @medicActId)";
+
+            // Delete records in FichaMedica table
+            string deleteFichaMedicaQuery = "DELETE FROM FichaMedica WHERE ato_medico = @medicActId";
+
+            // Delete record in AtosMedicos table
+            string deleteMedicActQuery = "DELETE FROM AtosMedicos WHERE id_ato_medico = @medicActId";
+
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                connection.Open();
+                using (MySqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Delete related records in MateriaisUtilizados table
+                        using (MySqlCommand command = new MySqlCommand(deleteMateriaisQuery, connection, transaction))
+                        {
+                            command.Parameters.AddWithValue("@medicActId", medicActId);
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Delete related records in Diagnosticos table
+                        using (MySqlCommand command = new MySqlCommand(deleteDiagnosticosQuery, connection, transaction))
+                        {
+                            command.Parameters.AddWithValue("@medicActId", medicActId);
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Delete records in FichaMedica table
+                        using (MySqlCommand command = new MySqlCommand(deleteFichaMedicaQuery, connection, transaction))
+                        {
+                            command.Parameters.AddWithValue("@medicActId", medicActId);
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Delete record in AtosMedicos table
+                        using (MySqlCommand command = new MySqlCommand(deleteMedicActQuery, connection, transaction))
+                        {
+                            command.Parameters.AddWithValue("@medicActId", medicActId);
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Commit the transaction if all deletions were successful
+                        transaction.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        // Rollback the transaction if any error occurs
+                        transaction.Rollback();
+                        MessageBox.Show("Erro: " + e);
+                    }
+                }
+            }
+        }
+
     }
 }
