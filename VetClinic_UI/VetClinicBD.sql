@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS Animal (
     tipo_animal ENUM('Cão', 'Gato', 'Ave'),
     raca VARCHAR(50),
     sexo VARCHAR(1),
-    peso DECIMAL(5,2),
+    peso DECIMAL(7,2),
     data_registro DATE,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS Produto (
     tipo_produto VARCHAR(50),
     descricao_produto VARCHAR(255),
     quantidade_armazem INT,
-    preco_unitario DECIMAL(8,2),
+    preco_unitario DECIMAL(10,2),
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
 
@@ -79,3 +79,9 @@ CREATE TABLE IF NOT EXISTS Diagnosticos (
     descricao_diagnostico VARCHAR(255),
     FOREIGN KEY (id_ficha_medica) REFERENCES FichaMedica(id_ficha_medica)
 );
+
+-- Criação de usuário com permissões
+CREATE USER 'root2'@'localhost' IDENTIFIED BY '123456';
+
+-- Concedendo permissões ao usuário
+GRANT SELECT, INSERT, UPDATE, DELETE ON VetClinic.* TO 'root2'@'localhost';
