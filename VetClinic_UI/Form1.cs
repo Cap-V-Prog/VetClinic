@@ -689,7 +689,7 @@ namespace VetClinic_UI
         }
         private void AddUpdateConsBtn_Click(object sender, EventArgs e)
         {
-            if (!_updateMode3)
+            if (_updateMode3)
             {
                 _connectionManager = new MySQLConnectionManager("vetclinic");
                 _consultManager = new ConsultManager(_connectionManager);
@@ -699,6 +699,13 @@ namespace VetClinic_UI
                 _connectionManager = new MySQLConnectionManager("vetclinic");
                 _consultManager = new ConsultManager(_connectionManager);
                 textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
+            }
+            else
+            {
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _consultManager = new ConsultManager(_connectionManager);
+                
+                _consultManager.UpdateFichaMedica(int.Parse(textBox4.Text),DateTime.Today, comboBox1.Text,1,textBox8.Text,textBox9.Text,textBox7.Text,dateTimePicker1.Value);
             }
         }
 
@@ -736,9 +743,9 @@ namespace VetClinic_UI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ClearAllInputs(2);
             tabControl1.SelectedIndex = 0;
             SearchTxtBox.Focus();
+            ClearAllInputs(2);
         }
     }
 }

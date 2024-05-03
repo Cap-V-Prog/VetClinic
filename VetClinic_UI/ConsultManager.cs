@@ -178,5 +178,41 @@ namespace VetClinic_UI
 
             return dataTable;
         }
+        
+        public void UpdateFichaMedica(int id, DateTime dataAtoMedico, string tipoConsulta, int codigoColaborador, string diagnostico, string observacoes, string prescricaoMedica, DateTime proximaVisita)
+        {
+            string query = "UPDATE FichaMedica SET data_ato_medico = @dataAtoMedico, tipo_consulta = @tipoConsulta, codigo_colaborador = @codigoColaborador, " +
+                           "diagnostico = @diagnostico, observacoes = @observacoes, prescricao_medica = @prescricaoMedica, proxima_visita = @proximaVisita " +
+                           "WHERE id_ficha_medica = @id";
+
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@dataAtoMedico", dataAtoMedico);
+                    command.Parameters.AddWithValue("@tipoConsulta", tipoConsulta);
+                    command.Parameters.AddWithValue("@codigoColaborador", codigoColaborador);
+                    command.Parameters.AddWithValue("@diagnostico", diagnostico);
+                    command.Parameters.AddWithValue("@observacoes", observacoes);
+                    command.Parameters.AddWithValue("@prescricaoMedica", prescricaoMedica);
+                    command.Parameters.AddWithValue("@proximaVisita", proximaVisita);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Erro: " + e);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+        }
     }
 }
