@@ -69,9 +69,9 @@ namespace VetClinic_UI
             return dataTable;
         }
         
-        public void AddMedicAct(int animalId, string atoMedico, string descAtoMedico, decimal custoUnitario)
+        public void AddMedicAct(int animalId, string atoMedico, int idFichaMedica,string descAtoMedico, decimal custoUnitario)
         {
-            string query = "INSERT INTO AtosMedicos (id_animal, ato_medico, descricao_ato_medico, custo_unitario, data_insercao, estado) VALUES (@animalId, @atoMedico, @descAtoMedico, @custoUnitario, CURDATE(), 'ativo')";
+            string query = "INSERT INTO AtosMedicos (id_animal, ato_medico,id_ficha_medica, descricao_ato_medico, custo_unitario, data_insercao, estado) VALUES (@animalId, @atoMedico,@idFichaMedica, @descAtoMedico, @custoUnitario, CURDATE(), 'ativo')";
             
             using (MySqlConnection connection = connectionManager.GetConnection())
             {
@@ -79,6 +79,7 @@ namespace VetClinic_UI
                 {
                     command.Parameters.AddWithValue("@animalId", animalId);
                     command.Parameters.AddWithValue("@atoMedico", atoMedico);
+                    command.Parameters.AddWithValue("@idFichaMedica", idFichaMedica);
                     command.Parameters.AddWithValue("@descAtoMedico", descAtoMedico);
                     command.Parameters.AddWithValue("@custoUnitario", custoUnitario);
 
@@ -123,15 +124,6 @@ namespace VetClinic_UI
         //DANGER FUNCTIONS
         public void DeleteMedicAct(int medicActId)
         {
-            // Delete related records in MateriaisUtilizados table
-            string deleteMateriaisQuery = "DELETE FROM MateriaisUtilizados WHERE id_ficha_medica IN (SELECT id_ficha_medica FROM FichaMedica WHERE ato_medico = @medicActId)";
-
-            // Delete related records in Diagnosticos table
-            string deleteDiagnosticosQuery = "DELETE FROM Diagnosticos WHERE id_ficha_medica IN (SELECT id_ficha_medica FROM FichaMedica WHERE ato_medico = @medicActId)";
-
-            // Delete records in FichaMedica table
-            string deleteFichaMedicaQuery = "DELETE FROM FichaMedica WHERE ato_medico = @medicActId";
-
             // Delete record in AtosMedicos table
             string deleteMedicActQuery = "DELETE FROM AtosMedicos WHERE id_ato_medico = @medicActId";
 
@@ -142,27 +134,6 @@ namespace VetClinic_UI
                 {
                     try
                     {
-                        // Delete related records in MateriaisUtilizados table
-                        using (MySqlCommand command = new MySqlCommand(deleteMateriaisQuery, connection, transaction))
-                        {
-                            command.Parameters.AddWithValue("@medicActId", medicActId);
-                            command.ExecuteNonQuery();
-                        }
-
-                        // Delete related records in Diagnosticos table
-                        using (MySqlCommand command = new MySqlCommand(deleteDiagnosticosQuery, connection, transaction))
-                        {
-                            command.Parameters.AddWithValue("@medicActId", medicActId);
-                            command.ExecuteNonQuery();
-                        }
-
-                        // Delete records in FichaMedica table
-                        using (MySqlCommand command = new MySqlCommand(deleteFichaMedicaQuery, connection, transaction))
-                        {
-                            command.Parameters.AddWithValue("@medicActId", medicActId);
-                            command.ExecuteNonQuery();
-                        }
-
                         // Delete record in AtosMedicos table
                         using (MySqlCommand command = new MySqlCommand(deleteMedicActQuery, connection, transaction))
                         {

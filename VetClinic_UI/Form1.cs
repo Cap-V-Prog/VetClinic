@@ -11,10 +11,12 @@ namespace VetClinic_UI
         private bool _eraseMode;
         private bool _updateMode;
         private bool _updateMode2;
+        private bool _updateMode3;
         MySQLConnectionManager _connectionManager = new MySQLConnectionManager("vetclinic");
         
         private AnimalManager _animalManager;
         private MedicActManager _medicActManager;
+        private ConsultManager _consultManager;
         
         public Form1()
         {
@@ -25,6 +27,9 @@ namespace VetClinic_UI
             AnimalTypeTxt.SelectedIndex=0;
             SearchFilter.SelectedIndex = 4;
             SearchFilterTxt2.SelectedIndex = 3;
+            
+            _consultManager = new ConsultManager(_connectionManager);
+            textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -355,12 +360,15 @@ namespace VetClinic_UI
                 // Retrieve data from the selected row
                 IdTxtBox.Text = selectedRow.Cells["id"].Value.ToString();
                 AnimalIDTxtBox.Text = selectedRow.Cells["id"].Value.ToString();
+                textBox2.Text = selectedRow.Cells["id"].Value.ToString();
 
                 AnimalNameTxtBox.Text = selectedRow.Cells["nome_animal"].Value.ToString();
                 AnimalNameTxtBox2.Text = selectedRow.Cells["nome_animal"].Value.ToString();
+                textBox3.Text = selectedRow.Cells["nome_animal"].Value.ToString();
                 
                 OwnerNameTxtBox.Text = selectedRow.Cells["nome_dono"].Value.ToString();
                 OwnerNameTxtBox2.Text = selectedRow.Cells["nome_dono"].Value.ToString();
+                textBox1.Text = selectedRow.Cells["nome_dono"].Value.ToString();
                 
                 OwnerContactTxtBox.Text = selectedRow.Cells["contato_dono"].Value.ToString();
                 BreedTxtBox.Text = selectedRow.Cells["raca"].Value.ToString();
@@ -430,9 +438,27 @@ namespace VetClinic_UI
 
                     SearchFilterTxt2.SelectedIndex = 3;
                     break;
+                case 2:
+                    textBox1.Clear();
+                    textBox2.Clear();
+                    textBox3.Clear();
+                    textBox4.Clear();
+                    textBox5.Clear();
+                    textBox6.Clear();
+                    textBox7.Clear();
+                    textBox8.Clear();
+                    textBox9.Clear();
+                    dateTimePicker1.Value=DateTime.Now;
+
+                    comboBox1.SelectedIndex = 0;
+
+                    dataGridView3.DataSource = new DataTable();
+                    dataGridView4.DataSource = new DataTable();
+                    break;
                 default:
                     ClearAllInputs(0);
                     ClearAllInputs(1);
+                    ClearAllInputs(2);
                     break;
                 
             }
@@ -452,6 +478,8 @@ namespace VetClinic_UI
         private void ClearBtn2_Click(object sender, EventArgs e)
         {
             ClearAllInputs(1);
+            tabControl1.SelectedIndex = 0;
+            SearchTxtBox.Focus();
         }
 
         private void SearchBtn2_Click(object sender, EventArgs e)
@@ -530,11 +558,12 @@ namespace VetClinic_UI
                         _connectionManager = new MySQLConnectionManager("vetclinic");
                         _medicActManager = new MedicActManager(_connectionManager);
                     
-                        _medicActManager.AddMedicAct(int.Parse(AnimalIDTxtBox.Text),MedicActTxtBox.Text,DescMedicActTxtBox.Text,decimal.Parse(PriceTxtBox.Text));
+                        _medicActManager.AddMedicAct(int.Parse(AnimalIDTxtBox.Text),MedicActTxtBox.Text,int.Parse(textBox4.Text),DescMedicActTxtBox.Text,decimal.Parse(PriceTxtBox.Text));
 
                         ClearAllInputs(1);
 
                         MessageBox.Show(@"Novo registo adicionado com sucesso!", @"Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tabControl1.SelectedIndex = 1;
                     }
                     catch (Exception ex)
                     {
@@ -636,6 +665,80 @@ namespace VetClinic_UI
         private void SearchFilterTxt2_SelectedIndexChanged(object sender, EventArgs e)
         {
             SearchTxtBox2.Clear();
+        }
+        
+        private void AdicionarBtn_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedIndex = 2;
+            throw new System.NotImplementedException();
+        }
+        private void RemoverAtoBtn_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+        private void RemoveConsBtn_Click(object sender, EventArgs e)
+        {
+            _connectionManager = new MySQLConnectionManager("vetclinic");
+            _consultManager = new ConsultManager(_connectionManager);
+                
+            _consultManager.RemoveConsultation(int.Parse(textBox4.Text));
+            
+            _connectionManager = new MySQLConnectionManager("vetclinic");
+            _consultManager = new ConsultManager(_connectionManager);
+            textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
+        }
+        private void AddUpdateConsBtn_Click(object sender, EventArgs e)
+        {
+            if (!_updateMode3)
+            {
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _consultManager = new ConsultManager(_connectionManager);
+                
+                _consultManager.AddFichaMedica(int.Parse(textBox4.Text),int.Parse(textBox2.Text),DateTime.Today, comboBox1.Text,1,textBox8.Text,textBox9.Text,textBox7.Text,dateTimePicker1.Value);
+                
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _consultManager = new ConsultManager(_connectionManager);
+                textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
+            }
+        }
+
+        private void tabChange(object sener, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 1)
+            {
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _consultManager = new ConsultManager(_connectionManager);
+
+                dataGridView3.DataSource = _consultManager.GetAtoMedicoByFichaMedicaID(int.Parse(textBox4.Text));
+                
+                if(!string.IsNullOrEmpty(textBox2.Text))
+                {
+                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                    _consultManager = new ConsultManager(_connectionManager);
+                    dataGridView4.DataSource = _consultManager.GetConsultasByAnimalID(int.Parse(textBox2.Text));
+                }
+                else
+                {
+                    MessageBox.Show(@"Por favor selecione um animal antes de realizar quaisquer operações", @"Atenção");
+                    tabControl1.SelectedIndex = 0;
+                }
+            }
+
+            if (tabControl1.SelectedIndex == 2)
+            {
+                if (string.IsNullOrEmpty(AnimalIDTxtBox.Text))
+                {
+                    MessageBox.Show(@"Por favor selecione um animal antes de realizar quaisquer operações", @"Atenção");
+                    tabControl1.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ClearAllInputs(2);
+            tabControl1.SelectedIndex = 0;
+            SearchTxtBox.Focus();
         }
     }
 }

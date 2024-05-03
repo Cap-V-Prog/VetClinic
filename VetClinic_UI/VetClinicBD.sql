@@ -32,35 +32,34 @@ CREATE TABLE IF NOT EXISTS Produto (
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
 
+-- Tabela para registro de ficha médica do animal
+CREATE TABLE IF NOT EXISTS FichaMedica (
+    id_ficha_medica INT PRIMARY KEY,
+    id_animal INT,
+    data_ato_medico DATE,
+    tipo_consulta VARCHAR(100),
+    codigo_colaborador INT,
+    diagnostico TEXT,
+    observacoes TEXT,
+    prescricao_medica TEXT,
+    proxima_visita DATE,
+    estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
+    FOREIGN KEY (id_animal) REFERENCES Animal(id)
+);
+
 -- Tabela para registro de atos médicos
 CREATE TABLE IF NOT EXISTS AtosMedicos (
     id_ato_medico INT AUTO_INCREMENT PRIMARY KEY,
     id_animal INT,
+    id_ficha_medica INT,
     ato_medico VARCHAR(100),
     descricao_ato_medico TEXT,
     custo_unitario DECIMAL(8,2),
     data_insercao DATETIME,
     data_ultima_alteracao DATETIME,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
-    FOREIGN KEY (id_animal) REFERENCES Animal(id)
-);
-
--- Tabela para registro de ficha médica do animal
-CREATE TABLE IF NOT EXISTS FichaMedica (
-    id_ficha_medica INT AUTO_INCREMENT PRIMARY KEY,
-    id_animal INT,
-    data_ato_medico DATE,
-    tipo_consulta VARCHAR(100),
-    codigo_colaborador INT,
-    diagnostico TEXT,
-    ato_medico INT,
-    peso DECIMAL(5,2),
-    observacoes TEXT,
-    prescricao_medica TEXT,
-    proxima_visita DATE,
-    estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
     FOREIGN KEY (id_animal) REFERENCES Animal(id),
-    FOREIGN KEY (ato_medico) REFERENCES AtosMedicos(id_ato_medico)
+    FOREIGN KEY (id_ficha_medica) REFERENCES FichaMedica(id_ficha_medica) ON DELETE CASCADE                              
 );
 
 -- Tabela para registrar os materiais utilizados em cada consulta
@@ -81,7 +80,7 @@ CREATE TABLE IF NOT EXISTS Diagnosticos (
 );
 
 -- Criação de usuário com permissões
-CREATE USER 'root2'@'localhost' IDENTIFIED BY '123456';
+CREATE USER IF NOT EXISTS 'root2'@'localhost' IDENTIFIED BY '123456';
 
 -- Concedendo permissões ao usuário
 GRANT SELECT, INSERT, UPDATE, DELETE ON VetClinic.* TO 'root2'@'localhost';
