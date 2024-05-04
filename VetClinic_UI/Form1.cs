@@ -23,6 +23,7 @@ namespace VetClinic_UI
             InitializeComponent();
             IdTxtBox_TextChanged(null,null);
             MedicActIDTxtBox_TextChanged(null,null);
+            ClearAllInputs(-1);
             SexM.Checked = true;
             AnimalTypeTxt.SelectedIndex=0;
             SearchFilter.SelectedIndex = 4;
@@ -423,9 +424,11 @@ namespace VetClinic_UI
                     AnimalBirth.Value = DateTime.Now;
                     break;
                 case 1:
+                    /*
                     AnimalIDTxtBox.Clear();
                     AnimalNameTxtBox2.Clear();
                     OwnerNameTxtBox2.Clear();
+                    */
                     MedicActIDTxtBox.Clear();
                     MedicActTxtBox.Clear();
                     MedicActDateTxtBox.Clear();
@@ -670,10 +673,13 @@ namespace VetClinic_UI
         private void AdicionarBtn_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedIndex = 2;
-            throw new System.NotImplementedException();
         }
         private void RemoverAtoBtn_Click(object sender, EventArgs e)
         {
+            foreach (var VARIABLE in dataGridView3.SelectedRows)
+            {
+                VARIABLE.Cells.
+            }
             throw new System.NotImplementedException();
         }
         private void RemoveConsBtn_Click(object sender, EventArgs e)
@@ -746,6 +752,45 @@ namespace VetClinic_UI
             tabControl1.SelectedIndex = 0;
             SearchTxtBox.Focus();
             ClearAllInputs(2);
+            _connectionManager = new MySQLConnectionManager("vetclinic");
+            _consultManager = new ConsultManager(_connectionManager);
+            textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
+        }
+        
+        private void DataGridView4_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Check if the double-clicked cell is not a header cell and that a row is selected
+            if (e.RowIndex >= 0 && dataGridView4.SelectedRows.Count > 0)
+            {
+                // Get the selected row
+                DataGridViewRow selectedRow = dataGridView4.SelectedRows[0];
+
+                // Retrieve data from the selected row
+                textBox4.Text = selectedRow.Cells["id_ficha_medica"].Value.ToString();
+                textBox2.Text = selectedRow.Cells["id_animal"].Value.ToString();
+
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _animalManager = new AnimalManager(_connectionManager);
+                textBox3.Text = _animalManager.GetAnimalName(int.Parse(textBox2.Text));
+                
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _animalManager = new AnimalManager(_connectionManager);
+                textBox1.Text = _animalManager.GetOwnerName(int.Parse(textBox2.Text));
+                
+                textBox6.Text = selectedRow.Cells["data_ato_medico"].Value.ToString();
+                comboBox1.Text = selectedRow.Cells["tipo_consulta"].Value.ToString();
+                
+                textBox5.Text = selectedRow.Cells["codigo_colaborador"].Value.ToString();
+                
+                textBox8.Text = selectedRow.Cells["diagnostico"].Value.ToString();
+                textBox7.Text = selectedRow.Cells["prescricao_medica"].Value.ToString();
+                textBox9.Text = selectedRow.Cells["observacoes"].Value.ToString();
+                dateTimePicker1.Value=DateTime.Parse(selectedRow.Cells["proxima_visita"].Value.ToString());
+                
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _consultManager = new ConsultManager(_connectionManager);
+                dataGridView3.DataSource = _consultManager.GetAtoMedicoByFichaMedicaID(int.Parse(textBox4.Text));
+            }
         }
     }
 }

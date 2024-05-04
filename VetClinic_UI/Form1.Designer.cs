@@ -647,6 +647,7 @@
             this.dataGridView4.ShowRowErrors = false;
             this.dataGridView4.Size = new System.Drawing.Size(922, 152);
             this.dataGridView4.TabIndex = 3;
+            this.dataGridView4.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView4_CellDoubleClick);
             // 
             // AddUpdateConsBtn
             // 
@@ -762,6 +763,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] { "Consulta de rotina", "Consulta de emergência", "Consulta de acompanhamento", "Consulta especializada", "Consulta de diagnóstico", "Consulta preventiva" });
             this.comboBox1.Location = new System.Drawing.Point(555, 287);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
@@ -863,14 +865,13 @@
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(129, 20);
             this.label27.TabIndex = 27;
-            this.label27.Text = "Data da ultima alteração";
+            this.label27.Text = "Codigo colaborador";
             this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBox5
             // 
             this.textBox5.Location = new System.Drawing.Point(141, 71);
             this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(240, 20);
             this.textBox5.TabIndex = 33;
             // 
@@ -909,7 +910,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(460, 19);
+            this.button2.Location = new System.Drawing.Point(460, 17);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 32;
