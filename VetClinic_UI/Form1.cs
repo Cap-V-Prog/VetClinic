@@ -690,6 +690,12 @@ namespace VetClinic_UI
         private void AdicionarBtn_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedIndex = 2;
+            _connectionManager = new MySQLConnectionManager("vetclinic");
+            _consultManager = new ConsultManager(_connectionManager);
+
+            _consultManager.AddFichaMedica(int.Parse(textBox4.Text), int.Parse(textBox2.Text), DateTime.Today,
+                comboBox1.Text, 1, textBox8.Text, textBox9.Text, textBox7.Text, dateTimePicker1.Value);
+            textBox4_TextChanged(null,null);
         }
         private void RemoverAtoBtn_Click(object sender, EventArgs e)
         {
@@ -780,8 +786,11 @@ namespace VetClinic_UI
             {
                 _connectionManager = new MySQLConnectionManager("vetclinic");
                 _consultManager = new ConsultManager(_connectionManager);
-
-                dataGridView3.DataSource = _consultManager.GetAtoMedicoByFichaMedicaID(int.Parse(textBox4.Text));
+                
+                if(!string.IsNullOrEmpty(textBox4.Text))
+                {
+                    dataGridView3.DataSource = _consultManager.GetAtoMedicoByFichaMedicaID(int.Parse(textBox4.Text));
+                }
                 
                 if(!string.IsNullOrEmpty(textBox2.Text))
                 {
