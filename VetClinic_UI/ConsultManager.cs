@@ -214,5 +214,36 @@ namespace VetClinic_UI
                 }
             }
         }
+        public bool CheckMedicalRecordExists(int medicalRecordId)
+        {
+            bool exists = false;
+
+            string query = "SELECT COUNT(*) FROM FichaMedica WHERE id_ficha_medica = @MedicalRecordId";
+
+            using (MySqlConnection connection = connectionManager.GetConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@MedicalRecordId", medicalRecordId);
+
+                    try
+                    {
+                        connection.Open();
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        exists = (count > 0);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Erro: " + e);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+
+            return exists;
+        }
     }
 }

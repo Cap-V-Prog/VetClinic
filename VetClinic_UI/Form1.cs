@@ -340,6 +340,32 @@ namespace VetClinic_UI
             return true;
         }
         
+        private bool CheckInputs3(bool diagnostico = true, bool observacoes = true, bool tipoConsulta = true)
+        {
+            if (diagnostico && string.IsNullOrEmpty(textBox8.Text))
+            {
+                MessageBox.Show(@"Por favor, preencha o diagnostico.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox8.Focus();
+                return false;
+            }
+
+            if (observacoes && string.IsNullOrEmpty(textBox9.Text))
+            {
+                MessageBox.Show(@"Por favor, preencha as observações.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox9.Focus();
+                return false;
+            }
+
+            if (tipoConsulta && string.IsNullOrEmpty(comboBox1.Text))
+            {
+                MessageBox.Show(@"Por favor, preencha o tipo de consulta.", @"Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox1.Focus();
+                return false;
+            }
+
+            return true;
+        }
+        
         private void OwnerContactTxtBox_Validating(object sender, CancelEventArgs e)
         {
             // Check if the contact number has exactly 9 digits
@@ -395,7 +421,6 @@ namespace VetClinic_UI
                     default:
                         throw new Exception("Erro ao carregar o sexo do animal");
                 }
-                
             }
         }
         
@@ -424,11 +449,9 @@ namespace VetClinic_UI
                     AnimalBirth.Value = DateTime.Now;
                     break;
                 case 1:
-                    /*
                     AnimalIDTxtBox.Clear();
                     AnimalNameTxtBox2.Clear();
                     OwnerNameTxtBox2.Clear();
-                    */
                     MedicActIDTxtBox.Clear();
                     MedicActTxtBox.Clear();
                     MedicActDateTxtBox.Clear();
@@ -467,15 +490,9 @@ namespace VetClinic_UI
             }
         }
 
-        private void SelectDummyBtn_Click(object sender, EventArgs e)
-        {
-            tabControl1.SelectedIndex = 0;
-            SearchTxtBox.Focus();
-        }
-
         private void ClearBtn_Click(object sender, EventArgs e)
         {
-            ClearAllInputs(0);
+            ClearAllInputs(-1);
         }
 
         private void ClearBtn2_Click(object sender, EventArgs e)
@@ -676,11 +693,39 @@ namespace VetClinic_UI
         }
         private void RemoverAtoBtn_Click(object sender, EventArgs e)
         {
-            foreach (var VARIABLE in dataGridView3.SelectedRows)
+            if (dataGridView3.SelectedRows.Count == 0)
             {
-                VARIABLE.Cells.
+                MessageBox.Show("Nenhuma linha selecionada.");
+                return;
             }
-            throw new System.NotImplementedException();
+            
+            DialogResult result = MessageBox.Show("Tem certeza de que deseja excluir os registros selecionados?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                int totalRegistrosExcluidos = 0;
+
+                foreach (DataGridViewRow selectedRow in dataGridView3.SelectedRows)
+                {
+                    int idAtoMedico = Convert.ToInt32(selectedRow.Cells["id_ato_medico"].Value);
+
+                    try
+                    {
+                        totalRegistrosExcluidos++;
+                        _connectionManager = new MySQLConnectionManager("vetclinic");
+                        _medicActManager = new MedicActManager(_connectionManager);
+
+                        _medicActManager.DeleteMedicAct(idAtoMedico);
+                        
+                    }
+                    catch (Exception exception)
+                    {
+                        totalRegistrosExcluidos--;
+                        MessageBox.Show("Erro ao remover o ato médico: " + exception.Message);
+                    }
+                }
+                MessageBox.Show($@"Foram excluídos {totalRegistrosExcluidos} registros de atos médicos.", @"Exclusão Concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
         private void RemoveConsBtn_Click(object sender, EventArgs e)
         {
@@ -692,30 +737,44 @@ namespace VetClinic_UI
             _connectionManager = new MySQLConnectionManager("vetclinic");
             _consultManager = new ConsultManager(_connectionManager);
             textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
+            tabControl1.SelectedIndex = 0;
+            ClearAllInputs(-1);
         }
         private void AddUpdateConsBtn_Click(object sender, EventArgs e)
         {
-            if (_updateMode3)
+            if (!_updateMode3)
             {
-                _connectionManager = new MySQLConnectionManager("vetclinic");
-                _consultManager = new ConsultManager(_connectionManager);
-                
-                _consultManager.AddFichaMedica(int.Parse(textBox4.Text),int.Parse(textBox2.Text),DateTime.Today, comboBox1.Text,1,textBox8.Text,textBox9.Text,textBox7.Text,dateTimePicker1.Value);
-                
-                _connectionManager = new MySQLConnectionManager("vetclinic");
-                _consultManager = new ConsultManager(_connectionManager);
-                textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
+                if (CheckInputs3())
+                {
+                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                    _consultManager = new ConsultManager(_connectionManager);
+
+                    _consultManager.AddFichaMedica(int.Parse(textBox4.Text), int.Parse(textBox2.Text), DateTime.Today,
+                        comboBox1.Text, 1, textBox8.Text, textBox9.Text, textBox7.Text, dateTimePicker1.Value);
+
+                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                    _consultManager = new ConsultManager(_connectionManager);
+                    textBox4.Text = _consultManager.GetNextFichaMedicaID().ToString();
+                    tabControl1.SelectedIndex = 0;
+                    ClearAllInputs(-1);
+                }
             }
             else
             {
-                _connectionManager = new MySQLConnectionManager("vetclinic");
-                _consultManager = new ConsultManager(_connectionManager);
-                
-                _consultManager.UpdateFichaMedica(int.Parse(textBox4.Text),DateTime.Today, comboBox1.Text,1,textBox8.Text,textBox9.Text,textBox7.Text,dateTimePicker1.Value);
+                if(CheckInputs3())
+                {
+                    _connectionManager = new MySQLConnectionManager("vetclinic");
+                    _consultManager = new ConsultManager(_connectionManager);
+
+                    _consultManager.UpdateFichaMedica(int.Parse(textBox4.Text), DateTime.Today, comboBox1.Text, 1,
+                        textBox8.Text, textBox9.Text, textBox7.Text, dateTimePicker1.Value);
+                    tabControl1.SelectedIndex = 0;
+                    ClearAllInputs(-1);
+                }
             }
         }
 
-        private void tabChange(object sener, EventArgs e)
+        private void TabChange(object sener, EventArgs e)
         {
             if (tabControl1.SelectedIndex == 1)
             {
@@ -739,10 +798,16 @@ namespace VetClinic_UI
 
             if (tabControl1.SelectedIndex == 2)
             {
-                if (string.IsNullOrEmpty(AnimalIDTxtBox.Text))
+                if (string.IsNullOrEmpty(textBox2.Text))
                 {
                     MessageBox.Show(@"Por favor selecione um animal antes de realizar quaisquer operações", @"Atenção");
                     tabControl1.SelectedIndex = 0;
+                }
+                else
+                {
+                    AnimalIDTxtBox.Text = textBox2.Text;
+                    AnimalNameTxtBox2.Text = textBox3.Text;
+                    OwnerNameTxtBox2.Text = textBox1.Text;
                 }
             }
         }
@@ -752,6 +817,7 @@ namespace VetClinic_UI
             tabControl1.SelectedIndex = 0;
             SearchTxtBox.Focus();
             ClearAllInputs(2);
+            ClearAllInputs(1);
             _connectionManager = new MySQLConnectionManager("vetclinic");
             _consultManager = new ConsultManager(_connectionManager);
             textBox4.Text=_consultManager.GetNextFichaMedicaID().ToString();
@@ -790,6 +856,25 @@ namespace VetClinic_UI
                 _connectionManager = new MySQLConnectionManager("vetclinic");
                 _consultManager = new ConsultManager(_connectionManager);
                 dataGridView3.DataSource = _consultManager.GetAtoMedicoByFichaMedicaID(int.Parse(textBox4.Text));
+            }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(textBox4.Text))
+            {
+                _connectionManager = new MySQLConnectionManager("vetclinic");
+                _consultManager = new ConsultManager(_connectionManager);
+                if (_consultManager.CheckMedicalRecordExists(int.Parse(textBox4.Text)))
+                {
+                    AddUpdateConsBtn.Text = "Atualizar registo";
+                    _updateMode3 = true;
+                }
+                else
+                {
+                    AddUpdateConsBtn.Text = "Inserir novo registo";
+                    _updateMode3 = false;
+                }
             }
         }
     }

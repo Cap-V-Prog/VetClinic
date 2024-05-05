@@ -171,7 +171,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(956, 645);
             this.tabControl1.TabIndex = 1;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabChange);
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabChange);
             // 
             // tabPage1
             // 
@@ -858,6 +858,7 @@
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(240, 20);
             this.textBox4.TabIndex = 35;
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
             // label27
             // 
